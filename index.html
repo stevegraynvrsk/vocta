@@ -1,631 +1,710 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { Bot, Zap, BrainCircuit, Clock, ShieldCheck, CheckCircle2, ChevronRight, Activity, Network, Fingerprint, Sparkles, Loader2, Play, Pause, Volume2, ChevronUp, MessageSquare } from 'lucide-react';
-
-const GlassCard = ({ children, className = "", style = {} }) => (
-  <div 
-    className={`bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] ${className}`}
-    style={style}
-  >
-    {children}
-  </div>
-);
-
-const GlassButton = ({ children, className = "", onClick }) => (
-  <button 
-    onClick={onClick}
-    className={`px-8 py-4 rounded-full bg-white/20 backdrop-blur-xl border border-white/60 hover:bg-white/40 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.04)] text-sm tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 ${className}`}
-  >
-    {children}
-  </button>
-);
-
-// Компонент Аудиоплеера
-const AudioPlayer = ({ src }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const audioRef = useRef(null);
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOCTA - Лучший сотрудник для твоего бизнеса</title>
   
-  // Состояние для динамической волны
-  const [waveform, setWaveform] = useState(Array.from({ length: 60 }).map(() => 15));
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-  // Анимация эквалайзера при проигрывании
-  useEffect(() => {
-    let interval;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        // Генерируем случайную высоту для каждого столбика (от 20% до 100%)
-        setWaveform(Array.from({ length: 60 }).map(() => Math.random() * 80 + 20));
-      }, 150); // Скорость обновления волны
-    } else {
-      // Спокойное состояние, когда на паузе (от 10% до 25%)
-      setWaveform(Array.from({ length: 60 }).map(() => Math.random() * 15 + 10));
+  <style>
+    /* Плавная прокрутка для всей страницы */
+    html {
+      scroll-behavior: smooth;
     }
-    return () => clearInterval(interval);
-  }, [isPlaying]);
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
+    
+    /* Дополнительные стили для скрытия полосы прокрутки внутри чата/плеера, если понадобится */
+    ::-webkit-scrollbar {
+      width: 6px;
     }
-    setIsPlaying(!isPlaying);
-  };
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(147, 197, 253, 0.5);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-slate-800 font-light selection:bg-blue-100 selection:text-blue-900 bg-[#eef4f9] relative">
 
-  const handleTimeUpdate = () => {
-    if (!audioRef.current) return;
-    const current = audioRef.current.currentTime;
-    const total = audioRef.current.duration || 1;
-    setProgress((current / total) * 100);
-  };
+  <!-- Main Hero Background (Coded visually to match your image exactly) -->
+  <div class="absolute top-0 left-0 w-full h-[120vh] z-0 overflow-hidden pointer-events-none">
+    <!-- Sky gradient -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#b5d3f5] via-[#d6e8fa] to-[#eef4f9]"></div>
 
-  const handleSeek = (e) => {
-    if (!audioRef.current) return;
-    const bounds = e.currentTarget.getBoundingClientRect();
-    const percent = (e.clientX - bounds.left) / bounds.width;
-    audioRef.current.currentTime = percent * audioRef.current.duration;
-    setProgress(percent * 100);
-  };
+    <!-- Glowing Ring -->
+    <div class="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full border-[3px] md:border-[4px] border-white shadow-[0_0_60px_rgba(255,255,255,0.8),inset_0_0_60px_rgba(255,255,255,0.8)] opacity-90 blur-[0.5px]"></div>
 
-  return (
-    <GlassCard className="w-full max-w-4xl p-6 md:p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-6 md:gap-8 mx-auto relative overflow-hidden group">
-      {/* Декоративный светящийся фон, реагирующий на воспроизведение */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-300/10 blur-[60px] rounded-full transition-opacity duration-700 ${isPlaying ? 'opacity-100' : 'opacity-0'}`}></div>
+    <!-- Ice Dunes (SVG Waves) -->
+    <div class="absolute bottom-0 left-0 w-full h-[45vh]">
+      <svg viewBox="0 0 1440 400" class="absolute bottom-0 w-full h-full drop-shadow-[0_-10px_20px_rgba(255,255,255,0.3)]" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="rgba(255, 255, 255, 0.6)" d="M0,150L60,160C120,170,240,190,360,195C480,200,600,190,720,165C840,140,960,100,1080,95C1200,90,1320,120,1380,135L1440,150L1440,400L1380,400C1320,400,1200,400,1080,400C960,400,840,400,720,400C600,400,480,400,360,400C240,400,120,400,60,400L0,400Z"></path>
+        <path fill="rgba(224, 238, 251, 0.9)" d="M0,220L80,210C160,200,320,180,480,185C640,190,800,220,960,235C1120,250,1280,250,1360,250L1440,250L1440,400L1360,400C1280,400,1120,400,960,400C800,400,640,400,480,400C320,400,160,400,80,400L0,400Z"></path>
+        <path fill="#eef4f9" d="M0,300L120,280C240,260,480,220,720,215C960,210,1200,240,1320,255L1440,270L1440,400L1320,400C1200,400,960,400,720,400C480,400,240,400,120,400L0,400Z"></path>
+      </svg>
+    </div>
+  </div>
 
-      {/* Скрытый тег аудио */}
-      {/* ВНИМАНИЕ: Замените src на ссылку вашего реального аудиофайла звонка */}
-      <audio 
-        ref={audioRef} 
-        src={src || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"} 
-        onTimeUpdate={handleTimeUpdate}
-        onEnded={() => setIsPlaying(false)}
-      />
+  <!-- HEADER -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6 bg-transparent">
+    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center">
+      <nav class="hidden md:flex items-center gap-10 text-sm tracking-wider text-slate-600">
+        <button onclick="scrollToSection('section-0')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Что делает</button>
+        <button onclick="scrollToSection('section-1')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Как это работает</button>
+        <button onclick="scrollToSection('section-2')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Анатомия</button>
+        <button onclick="scrollToSection('section-3')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Запуск</button>
+        <button onclick="scrollToSection('section-4')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Преимущества</button>
+      </nav>
+      <!-- Mobile menu hint -->
+      <div class="md:hidden text-sm tracking-widest uppercase font-medium">VOCTA</div>
+    </div>
+  </header>
 
-      {/* Кнопка Play/Pause */}
-      <button 
-        onClick={togglePlay}
-        className="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/40 border border-white/80 flex items-center justify-center text-blue-500 hover:bg-white/60 hover:scale-105 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.05)] z-10"
-      >
-        {isPlaying ? <Pause className="w-8 h-8 md:w-10 md:h-10 fill-current" /> : <Play className="w-8 h-8 md:w-10 md:h-10 fill-current ml-1" />}
-      </button>
+  <main class="pb-24 px-6 max-w-7xl mx-auto flex flex-col items-center overflow-hidden relative z-20">
+    
+    <!-- 2. HERO SECTION -->
+    <section class="w-full min-h-screen flex flex-col items-center justify-center text-center relative pt-20">
+      <h1 class="text-7xl md:text-9xl font-extralight tracking-[0.15em] mb-6 text-slate-900 drop-shadow-md">
+        VOCTA
+      </h1>
+      <p class="text-xl md:text-2xl font-light tracking-wide text-slate-800 max-w-2xl drop-shadow-sm">
+        лучший сотрудник для твоего бизнеса
+      </p>
+      <div class="mt-16 animate-bounce opacity-60">
+        <div class="w-[1px] h-20 bg-gradient-to-b from-transparent via-slate-500 to-transparent mx-auto"></div>
+      </div>
+    </section>
 
-      {/* Центральная часть с визуализатором (на все пространство) */}
-      <div className="flex-grow w-full flex items-center z-10 px-2 md:px-6">
-        {/* Визуализатор звуковой волны */}
-        <div 
-          className="flex items-center justify-between w-full h-20 md:h-24 cursor-pointer group/wave" 
-          onClick={handleSeek}
-        >
-          {waveform.map((h, i) => {
-            const isActive = (i / waveform.length) * 100 <= progress;
-            return (
-              <div
-                key={i}
-                className={`w-1 md:w-[6px] rounded-full transition-all duration-150 ease-in-out ${
-                  isActive 
-                    ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]' 
-                    : 'bg-blue-200/50 group-hover/wave:bg-blue-300/60'
-                }`}
-                style={{ height: `${h}%` }}
-              />
-            );
-          })}
+    <!-- 3. WHAT IT DOES -->
+    <section id="section-0" class="w-full pt-8 pb-20 scroll-mt-16">
+      <h2 class="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Что делает ваш новый сотрудник</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <!-- GlassCard -->
+        <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
+          <i data-lucide="zap" style="stroke-width: 1px;" class="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500"></i>
+          <h3 class="text-xl font-medium tracking-wide">Моментально отвечает всем вашим клиентам</h3>
+          <p class="text-slate-600 leading-relaxed font-light">Клиентам не нужно ждать, пока менеджер освободится.</p>
+        </div>
+        <!-- GlassCard -->
+        <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
+          <i data-lucide="check-circle-2" style="stroke-width: 1px;" class="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500"></i>
+          <h3 class="text-xl font-medium tracking-wide">Квалифицирует вашу заявку</h3>
+          <p class="text-slate-600 leading-relaxed font-light">Менеджер перезвонит уже с решением. А весь спам отметается, чтобы не тратить на него время.</p>
+        </div>
+        <!-- GlassCard -->
+        <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
+          <i data-lucide="brain-circuit" style="stroke-width: 1px;" class="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500"></i>
+          <h3 class="text-xl font-medium tracking-wide">Общается и рассуждает</h3>
+          <p class="text-slate-600 leading-relaxed font-light">Отвечает на вопросы клиентов, понимая, о чем спрашивают его. Не использует скрипты, а думает и отвечает моментально.</p>
+        </div>
+        <!-- GlassCard -->
+        <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
+          <i data-lucide="clock" style="stroke-width: 1px;" class="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500"></i>
+          <h3 class="text-xl font-medium tracking-wide">Работает 24/7</h3>
+          <p class="text-slate-600 leading-relaxed font-light">Все клиенты получат ответ вне зависимости от графика работы компании.</p>
         </div>
       </div>
-    </GlassCard>
-  );
-};
+    </section>
 
-const App = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+    <!-- 3.5 AUDIO DEMO SECTION -->
+    <section class="w-full pb-20 pt-8 flex flex-col items-center relative z-30">
+      <h2 class="text-2xl md:text-3xl font-light text-center mb-4 tracking-wide text-slate-800">Кейс работы нейро-сотрудника</h2>
+      <p class="text-center text-slate-600 font-light mb-10 max-w-2xl">
+        Консультация клиента по вопросам экологической документации, квалификация ЛИДа, запись на консультацию.
+      </p>
 
-  // States для анимации появления "Анатомии"
-  const anatomyRef = useRef(null);
-  const [anatomyVisible, setAnatomyVisible] = useState(false);
+      <!-- AUDIO PLAYER COMPONENT -->
+      <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] w-full max-w-4xl p-6 md:p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-6 md:gap-8 mx-auto relative overflow-hidden group">
+        <!-- Декоративный светящийся фон, реагирующий на воспроизведение -->
+        <div id="audio-bg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-300/10 blur-[60px] rounded-full transition-opacity duration-700 opacity-0 pointer-events-none"></div>
 
-  // States для анимации инфографики сравнения
-  const comparisonRef = useRef(null);
-  const [comparisonVisible, setComparisonVisible] = useState(false);
+        <!-- Скрытый тег аудио -->
+        <!-- ВНИМАНИЕ: Замените src на ссылку вашего реального аудиофайла звонка -->
+        <audio id="demo-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
-  // Gemini API States - ИИ Генератор сценариев
-  const [niche, setNiche] = useState('');
-  const [generatedScript, setGeneratedScript] = useState('');
-  const [isScriptLoading, setIsScriptLoading] = useState(false);
+        <!-- Кнопка Play/Pause -->
+        <button id="play-btn" class="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/40 border border-white/80 flex items-center justify-center text-blue-500 hover:bg-white/60 hover:scale-105 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.05)] z-10">
+          <i id="play-icon" data-lucide="play" class="w-8 h-8 md:w-10 md:h-10 fill-current ml-1"></i>
+          <i id="pause-icon" data-lucide="pause" class="w-8 h-8 md:w-10 md:h-10 fill-current hidden"></i>
+        </button>
 
-  const apiKey = ""; // Ключ API предоставляется средой выполнения
+        <!-- Центральная часть с визуализатором (на все пространство) -->
+        <div class="flex-grow w-full flex items-center z-10 px-2 md:px-6">
+          <!-- Визуализатор звуковой волны (генерируется через JS) -->
+          <div id="waveform-container" class="flex items-center justify-between w-full h-20 md:h-24 cursor-pointer group/wave">
+            <!-- Столбики будут добавлены сюда с помощью JS -->
+          </div>
+        </div>
+      </div>
+    </section>
 
-  // Функция вызова Gemini API с экспоненциальной задержкой (Exponential Backoff)
-  const callGeminiAPI = async (userText, systemText) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-    const payload = {
-      contents: [{ parts: [{ text: userText }] }],
-      systemInstruction: { parts: [{ text: systemText }] }
-    };
+    <!-- 4. HOW IT WORKS & INFOGRAPHIC -->
+    <section id="section-1" class="w-full pt-8 pb-20 scroll-mt-16">
+      <h2 class="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Как это работает?</h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        
+        <!-- Text side - REDESIGNED -->
+        <div class="flex flex-col gap-6 w-full">
+          <!-- Animated Element -->
+          <div class="anim-target bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 100ms;">
+            <div class="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
+              <i data-lucide="zap" class="w-5 h-5 text-blue-500"></i>
+            </div>
+            <div>
+              <h4 class="text-lg font-medium mb-2 text-slate-800 tracking-wide">Мгновенная реакция</h4>
+              <p class="text-slate-600 font-light text-sm md:text-base leading-relaxed">
+                Когда клиент звонит в вашу компанию, нейро-сотрудник <span class="font-medium text-slate-800">моментально отвечает</span> как живой человек и начинает вести клиента по диалогу. Клиенту не надо нажимать клавиши для выбора ответа, диктовать цель обращения или ждать на линии.
+              </p>
+            </div>
+          </div>
 
-    const delays = [1000, 2000, 4000, 8000, 16000];
-    for (let attempt = 0; attempt < 6; attempt++) {
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Извините, произошла ошибка при генерации ответа.";
-      } catch (error) {
-        if (attempt === 5) return "Ошибка подключения к ИИ. Пожалуйста, попробуйте позже.";
-        await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+          <!-- Animated Element -->
+          <div class="anim-target bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 300ms;">
+            <div class="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
+              <i data-lucide="brain-circuit" class="w-5 h-5 text-blue-500"></i>
+            </div>
+            <div>
+              <h4 class="text-lg font-medium mb-2 text-slate-800 tracking-wide">Естественный диалог</h4>
+              <p class="text-slate-600 font-light text-sm md:text-base leading-relaxed">
+                Нейро-сотрудник общается как живой человек, понимает собеседника и естественно отвечает на вопросы, <span class="font-medium text-slate-800">понимая логику диалога</span>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Animated Element -->
+          <div class="anim-target bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 500ms;">
+            <div class="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
+              <i data-lucide="network" class="w-5 h-5 text-blue-500"></i>
+            </div>
+            <div>
+              <h4 class="text-lg font-medium mb-2 text-slate-800 tracking-wide">Автоматизация данных</h4>
+              <p class="text-slate-600 font-light text-sm md:text-base leading-relaxed">
+                Он не упустит ни одной детали и зафиксирует их, для передачи менеджеру компании через <span class="font-medium text-slate-800">автоматизированную инфраструктуру</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infographic side - AUTONOMOUS ANIMATIONS -->
+        <div class="flex flex-col gap-8 w-full">
+          
+          <!-- Human Bar -->
+          <div class="flex flex-col gap-2">
+            <span class="anim-target text-xs uppercase tracking-widest text-slate-500 ml-2 transition-all duration-700 ease-out opacity-0" data-hide="opacity-0" data-show="opacity-100" style="transition-delay: 100ms;">Живой оператор</span>
+            
+            <div class="anim-target backdrop-blur-xl border p-2 rounded-full flex gap-1 h-14 w-full transition-all duration-700 ease-out opacity-0 bg-transparent border-transparent shadow-none" data-hide="opacity-0 bg-transparent border-transparent shadow-none" data-show="opacity-100 bg-white/20 border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)]" style="transition-delay: 200ms;">
+              <div class="anim-target bg-blue-200/40 w-[15%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 300ms;">Гудки</div>
+              <div class="anim-target bg-blue-300/40 w-[40%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-2 leading-tight transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 500ms;">«Сейчас все операторы заняты...»</div>
+              <div class="anim-target bg-blue-400/40 flex-grow rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-700 font-medium backdrop-blur-sm transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 700ms;">Диалог</div>
+            </div>
+          </div>
+
+          <!-- Old Bot Bar -->
+          <div class="flex flex-col gap-2">
+            <span class="anim-target text-xs uppercase tracking-widest text-slate-500 ml-2 transition-all duration-700 ease-out opacity-0" data-hide="opacity-0" data-show="opacity-100" style="transition-delay: 300ms;">Старый автоответчик</span>
+            
+            <div class="anim-target backdrop-blur-xl border p-2 rounded-full flex gap-1 h-14 w-full transition-all duration-700 ease-out opacity-0 bg-transparent border-transparent shadow-none" data-hide="opacity-0 bg-transparent border-transparent shadow-none" data-show="opacity-100 bg-white/20 border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)]" style="transition-delay: 400ms;">
+              <div class="anim-target bg-blue-200/30 w-[10%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 500ms;">Гудки</div>
+              <div class="anim-target bg-blue-300/30 w-[25%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 700ms;">Прослушать меню</div>
+              <div class="anim-target bg-blue-400/30 w-[15%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 900ms;">Нажать цифру</div>
+              <div class="anim-target bg-blue-500/30 w-[20%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 1100ms;">Ожидание</div>
+              <div class="anim-target bg-blue-600/30 flex-grow rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-700 font-medium backdrop-blur-sm transition-all duration-700 ease-out transform opacity-0 -translate-x-4 scale-95" data-hide="opacity-0 -translate-x-4 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 1300ms;">Диалог</div>
+            </div>
+          </div>
+
+          <!-- VOCTA Bar -->
+          <div class="flex flex-col gap-2 transform transition-transform hover:scale-[1.02] duration-300">
+            <span class="anim-target text-xs uppercase tracking-widest text-blue-500 font-medium ml-2 transition-all duration-700 ease-out opacity-0" data-hide="opacity-0" data-show="opacity-100" style="transition-delay: 800ms;">VOCTA</span>
+            
+            <div class="anim-target backdrop-blur-xl border border-teal-200/50 p-2 rounded-full flex gap-1 h-16 w-full transition-all duration-700 ease-out opacity-0 bg-transparent shadow-none" data-hide="opacity-0 bg-transparent shadow-none" data-show="opacity-100 bg-white/40 shadow-[0_0_30px_rgba(45,212,191,0.2)]" style="transition-delay: 900ms;">
+              <div class="anim-target bg-gradient-to-r from-teal-200/60 to-emerald-300/60 w-full rounded-full flex items-center justify-center text-sm md:text-base text-teal-900 font-medium tracking-wide backdrop-blur-md transition-all duration-1000 ease-out transform opacity-0 -translate-x-10 scale-95" data-hide="opacity-0 -translate-x-10 scale-95" data-show="opacity-100 translate-x-0 scale-100" style="transition-delay: 1100ms;">
+                Мгновенное решение вопроса
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4.5 ИИ ГЕНЕРАТОР СЦЕНАРИЕВ (Gemini Feature) -->
+    <section class="w-full py-16 flex flex-col items-center">
+      <div class="bg-white/30 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] w-full max-w-4xl p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden">
+        <!-- Декоративный блеск -->
+        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-300/20 blur-[50px] rounded-full pointer-events-none"></div>
+        
+        <div class="flex flex-col items-center text-center relative z-10">
+          <i data-lucide="sparkles" style="stroke-width: 1px;" class="w-10 h-10 text-blue-500 mb-4"></i>
+          <h2 class="text-2xl md:text-3xl font-light mb-4 tracking-wide">Примерьте VOCTA на свой бизнес</h2>
+          <p class="text-slate-600 font-light mb-8 max-w-2xl">
+            Узнайте, как наш ИИ будет общаться именно с вашими клиентами. Введите сферу вашей деятельности, и нейросеть сгенерирует пример идеального диалога.
+          </p>
+          
+          <div class="flex flex-col md:flex-row gap-4 w-full max-w-2xl mb-8">
+            <input 
+              type="text" 
+              id="niche-input"
+              placeholder="Например: Автосервис, Стоматология, Недвижимость..." 
+              class="flex-grow bg-white/40 border border-white/60 focus:border-blue-400 rounded-full px-6 py-4 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors"
+            />
+            <button 
+              id="generate-btn"
+              class="px-8 py-4 rounded-full bg-blue-50/50 hover:bg-blue-100/50 backdrop-blur-xl border border-blue-200/50 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.04)] text-sm tracking-widest uppercase font-medium text-slate-700 flex justify-center items-center gap-2"
+            >
+              <i id="btn-loader" data-lucide="loader-2" class="w-5 h-5 animate-spin hidden"></i>
+              <span id="btn-text">✨ Сгенерировать</span>
+            </button>
+          </div>
+
+          <!-- Скрытый по умолчанию блок с результатом -->
+          <div id="result-wrapper" class="hidden w-full max-w-3xl text-left bg-white/40 border border-white/50 p-6 md:p-8 rounded-3xl backdrop-blur-sm shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-opacity duration-700">
+            <div class="text-xs uppercase tracking-widest text-blue-500 font-medium mb-4 flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i> Сценарий готов
+            </div>
+            <div id="result-text" class="space-y-4 text-slate-700 font-light leading-relaxed whitespace-pre-wrap">
+              <!-- Сюда вставляется ответ от API -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ANATOMY PUZZLE (Animated Digital Brain) -->
+    <section id="section-2" class="w-full pt-8 pb-20 scroll-mt-16 flex flex-col items-center overflow-hidden">
+      <h2 class="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Из чего состоит ваш новый сотрудник</h2>
+      
+      <div class="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center place-items-center">
+
+        <!-- Левая колонка компонентов -->
+        <div class="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
+          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 100ms;">
+            <i data-lucide="activity" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
+            <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Voice</h3>
+            <p class="text-slate-600 font-light text-sm">Понимает речь клиента</p>
+          </div>
+
+          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 300ms;">
+            <i data-lucide="network" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
+            <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA API</h3>
+            <p class="text-slate-600 font-light text-sm">Отвечает за автоматизацию получения готовых ЛИДов</p>
+          </div>
+        </div>
+
+        <!-- Центральный мозг ИИ -->
+        <div class="anim-target order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out transform opacity-0 scale-75" data-hide="opacity-0 scale-75" data-show="opacity-100 scale-100" style="transition-delay: 500ms;">
+            <!-- Соединительные линии (видны на десктопе) -->
+            <div class="absolute top-1/2 left-[-30%] right-[-30%] h-[1px] bg-gradient-to-r from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
+            <div class="absolute left-1/2 top-[-30%] bottom-[-30%] w-[1px] bg-gradient-to-b from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
+
+            <!-- Вращающиеся кольца ядра -->
+            <div class="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite]"></div>
+            <div class="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse]"></div>
+            
+            <!-- Пульсирующая сердцевина -->
+            <div class="absolute inset-12 rounded-full bg-gradient-to-tr from-blue-300/30 to-white/40 backdrop-blur-md shadow-[0_0_80px_rgba(59,130,246,0.5)] animate-pulse"></div>
+            
+            <!-- Иконка мозга -->
+            <i data-lucide="brain-circuit" style="stroke-width: 1px;" class="w-20 h-20 md:w-24 md:h-24 text-blue-500 relative z-10 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"></i>
+        </div>
+
+        <!-- Правая колонка компонентов -->
+        <div class="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
+          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 700ms;">
+            <i data-lucide="brain-circuit" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
+            <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Think</h3>
+            <p class="text-slate-600 font-light text-sm">Думает как лучше ответить клиенту</p>
+          </div>
+
+          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 900ms;">
+            <i data-lucide="shield-check" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
+            <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Secure</h3>
+            <p class="text-slate-600 font-light text-sm">Обеспечивает безопасность вашего бюджета</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. LAUNCH TIMELINE -->
+    <section id="section-3" class="w-full pt-8 pb-20 scroll-mt-16">
+      <h2 class="text-3xl md:text-4xl font-light text-center mb-20 tracking-wide">Процесс запуска</h2>
+      
+      <div class="relative max-w-4xl mx-auto">
+        <!-- Central Line -->
+        <div class="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-200 via-blue-300 to-transparent transform md:-translate-x-1/2"></div>
+        
+        <!-- Шаг 1 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 01</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Ваша задача</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Проведем встречу, где обсудим задачу, которую должен выполнять ваш нейро-сотрудник.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 2 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 02</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Решение задачи</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Используя опыт более 14-ти лет продаж в банковской сфере, предложим вариант диалога для вашего нейро-сотрудника для решения бизнес задачи.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 3 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 03</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Обучение</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Обучим нейро-сотрудника общаться с клиентом, для решения бизнес задачи: отвечать на вопросы, предлагать товар или услугу, отрабатывать возражения, собирать данные клиентов и передавать их Вам.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 4 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 04</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Тестирование</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Проведем тестирование в «полевых условиях», чтобы ваш сотрудник эффективно выполнял свою задачу.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 5 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 05</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Запуск</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">После успешного прохождения тестирования, мы запускаем вашего нейро-сотрудника и настраиваем автоматизированную инфраструктуру, чтобы вы получали готовых к продаже клиентов.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Шаг 6 -->
+        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
+          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
+          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
+            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
+              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 06</div>
+              <h3 class="text-xl font-medium tracking-wide mb-3">Развитие</h3>
+              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Будем следить, чтобы ваш сотрудник непрерывно развивался, повышая свою эффективность.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. BENEFITS -->
+    <section id="section-4" class="w-full pt-8 pb-20 scroll-mt-16 max-w-4xl mx-auto">
+      <div class="bg-white/30 backdrop-blur-xl border border-white/70 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 md:p-16 rounded-[3rem]">
+        <h2 class="text-3xl md:text-4xl font-light text-center mb-12 tracking-wide">Почему нейро-сотрудник вам нужен</h2>
+        
+        <ul class="space-y-6">
+          <li class="flex items-start gap-4">
+            <div class="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
+              <i data-lucide="chevron-right" style="stroke-width: 2px;" class="w-3 h-3 text-blue-500"></i>
+            </div>
+            <p class="text-lg text-slate-700 font-light leading-relaxed">Сокращает ожидание клиента на 98% по сравнению с оператором и автоответчиком.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
+              <i data-lucide="chevron-right" style="stroke-width: 2px;" class="w-3 h-3 text-blue-500"></i>
+            </div>
+            <p class="text-lg text-slate-700 font-light leading-relaxed">Вопрос клиента решается быстрее, потому что нейро-сотрудник реагирует в диалоге быстрее человека.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
+              <i data-lucide="chevron-right" style="stroke-width: 2px;" class="w-3 h-3 text-blue-500"></i>
+            </div>
+            <p class="text-lg text-slate-700 font-light leading-relaxed">Минимизирует раздражение клиента из-за прослушивания автоответчика.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
+              <i data-lucide="chevron-right" style="stroke-width: 2px;" class="w-3 h-3 text-blue-500"></i>
+            </div>
+            <p class="text-lg text-slate-700 font-light leading-relaxed">Позволяет вашей компании оставаться на связи 24/7.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
+              <i data-lucide="chevron-right" style="stroke-width: 2px;" class="w-3 h-3 text-blue-500"></i>
+            </div>
+            <p class="text-lg text-slate-700 font-light leading-relaxed">Сокращает количество ошибок, которые возникают по вине человека.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 8. CALL TO ACTION -->
+    <section class="w-full py-20 flex justify-center text-center">
+      <button 
+        onclick="alert('Форма захвата лидов будет открыта здесь')"
+        class="px-10 py-5 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/80 hover:bg-white/60 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] text-base md:text-lg tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 scale-100 hover:scale-105"
+      >
+        Нанять своего лучшего сотрудника
+      </button>
+    </section>
+
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="w-full py-8 border-t border-white/30 backdrop-blur-md bg-white/10 text-center relative z-20">
+    <p class="text-xs tracking-widest text-slate-500 font-light">&copy; <span id="current-year"></span> VOCTA. ALL RIGHTS RESERVED.</p>
+  </footer>
+
+  <!-- Scroll to Top Button -->
+  <button
+    id="scroll-to-top"
+    onclick="scrollToTop()"
+    class="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-slate-700 hover:text-blue-500 hover:bg-white/50 transition-all duration-500 transform translate-y-16 opacity-0 pointer-events-none"
+    aria-label="Наверх"
+  >
+    <i data-lucide="chevron-up" class="w-6 h-6"></i>
+  </button>
+
+  <!-- Vanilla JS Script -->
+  <script>
+    // 1. Инициализация иконок Lucide
+    lucide.createIcons();
+
+    // 2. Установка текущего года в футере
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // 3. Логика скролла (Шапка и кнопка наверх)
+    const header = document.getElementById('main-header');
+    const scrollTopBtn = document.getElementById('scroll-to-top');
+
+    window.addEventListener('scroll', () => {
+      // Обновление шапки
+      if (window.scrollY > 50) {
+        header.classList.add('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
+        header.classList.remove('py-6', 'bg-transparent');
+      } else {
+        header.classList.remove('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
+        header.classList.add('py-6', 'bg-transparent');
+      }
+
+      // Обновление кнопки наверх
+      if (window.scrollY > 400) {
+        scrollTopBtn.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+        scrollTopBtn.classList.add('translate-y-0', 'opacity-100');
+      } else {
+        scrollTopBtn.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+        scrollTopBtn.classList.remove('translate-y-0', 'opacity-100');
+      }
+    });
+
+    // 4. Плавный скролл по якорным ссылкам
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
 
-  // Обработчик для генерации сценария диалога
-  const handleGenerateScript = async () => {
-    if (!niche.trim()) return;
-    setIsScriptLoading(true);
-    setGeneratedScript('');
-    
-    const prompt = `Напиши короткий, реалистичный пример диалога по телефону (на русском языке) между ИИ-ассистентом VOCTA и клиентом для бизнеса: ${niche}. 
-    Диалог должен показывать, как круто VOCTA квалифицирует лида, отвечает на вопросы без скрипта и закрывает сделку/записывает на прием. 
-    Формат: 
-    Клиент: [реплика]
-    VOCTA: [умный ответ ИИ]. 
-    Максимум 4-5 обменов репликами. Без лишних вступлений.`;
-    
-    const systemInstruction = "Ты эксперт по продажам и копирайтер, создающий продающие сценарии для ИИ ассистентов.";
-    
-    const response = await callGeminiAPI(prompt, systemInstruction);
-    setGeneratedScript(response);
-    setIsScriptLoading(false);
-  };
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-  // Логика отслеживания скролла для анимации мозга
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
+    // 5. Анимации при скролле (Intersection Observer)
+    const animObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
-          setAnatomyVisible(true);
+          const targets = entry.target.querySelectorAll('.anim-target');
+          targets.forEach(t => {
+            const hideClasses = (t.getAttribute('data-hide') || '').split(' ').filter(Boolean);
+            const showClasses = (t.getAttribute('data-show') || '').split(' ').filter(Boolean);
+            
+            if(hideClasses.length) t.classList.remove(...hideClasses);
+            if(showClasses.length) t.classList.add(...showClasses);
+          });
+          animObserver.unobserve(entry.target); // Анимация проигрывается 1 раз
         }
-      },
-      { threshold: 0.15 } // Запуск анимации, когда 15% блока появляется на экране (раньше было 0.3)
-    );
+      });
+    }, { threshold: 0.15 });
 
-    if (anatomyRef.current) {
-      observer.observe(anatomyRef.current);
+    const section1 = document.getElementById('section-1');
+    const section2 = document.getElementById('section-2');
+    if(section1) animObserver.observe(section1);
+    if(section2) animObserver.observe(section2);
+
+    // 6. Аудиоплеер и живая волна эквалайзера
+    const audioEl = document.getElementById('demo-audio');
+    const playBtn = document.getElementById('play-btn');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+    const audioBg = document.getElementById('audio-bg');
+    const waveformContainer = document.getElementById('waveform-container');
+
+    let isPlaying = false;
+    let audioProgress = 0;
+    let waveformHeights = Array(60).fill(15);
+    let waveInterval;
+
+    // Инициализация столбиков волны
+    for (let i = 0; i < 60; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar w-1 md:w-[6px] rounded-full transition-all duration-150 ease-in-out bg-blue-200/50 group-hover/wave:bg-blue-300/60';
+      bar.style.height = '15%';
+      waveformContainer.appendChild(bar);
     }
+    const waveBars = document.querySelectorAll('.wave-bar');
 
-    return () => {
-      if (anatomyRef.current) observer.unobserve(anatomyRef.current);
-    };
-  }, []);
-
-  // Логика отслеживания скролла для инфографики сравнения
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setComparisonVisible(true);
+    function updateWaveVisuals() {
+      waveBars.forEach((bar, i) => {
+        const isActive = (i / 60) * 100 <= audioProgress;
+        if (isActive) {
+          bar.classList.add('bg-blue-500', 'shadow-[0_0_8px_rgba(59,130,246,0.6)]');
+          bar.classList.remove('bg-blue-200/50', 'group-hover/wave:bg-blue-300/60');
+        } else {
+          bar.classList.remove('bg-blue-500', 'shadow-[0_0_8px_rgba(59,130,246,0.6)]');
+          bar.classList.add('bg-blue-200/50', 'group-hover/wave:bg-blue-300/60');
         }
-      },
-      { threshold: 0.15 } // Уменьшили порог срабатывания для раннего запуска
-    );
-
-    if (comparisonRef.current) {
-      observer.observe(comparisonRef.current);
+        bar.style.height = `${waveformHeights[i]}%`;
+      });
     }
 
-    return () => {
-      if (comparisonRef.current) observer.unobserve(comparisonRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-      setShowScrollTop(window.scrollY > 400); // Показываем кнопку после 400px прокрутки
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  return (
-    <div className="min-h-screen font-sans text-slate-800 font-light selection:bg-blue-100 selection:text-blue-900 bg-[#eef4f9] relative">
-      
-      {/* Main Hero Background (Coded visually to match your image exactly) */}
-      <div className="absolute top-0 left-0 w-full h-[120vh] z-0 overflow-hidden pointer-events-none">
-        {/* Sky gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#b5d3f5] via-[#d6e8fa] to-[#eef4f9]"></div>
-
-        {/* Glowing Ring */}
-        <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full border-[3px] md:border-[4px] border-white shadow-[0_0_60px_rgba(255,255,255,0.8),inset_0_0_60px_rgba(255,255,255,0.8)] opacity-90 blur-[0.5px]"></div>
-
-        {/* Ice Dunes (SVG Waves) */}
-        <div className="absolute bottom-0 left-0 w-full h-[45vh]">
-          <svg viewBox="0 0 1440 400" className="absolute bottom-0 w-full h-full drop-shadow-[0_-10px_20px_rgba(255,255,255,0.3)]" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill="rgba(255, 255, 255, 0.6)" d="M0,150L60,160C120,170,240,190,360,195C480,200,600,190,720,165C840,140,960,100,1080,95C1200,90,1320,120,1380,135L1440,150L1440,400L1380,400C1320,400,1200,400,1080,400C960,400,840,400,720,400C600,400,480,400,360,400C240,400,120,400,60,400L0,400Z"></path>
-            <path fill="rgba(224, 238, 251, 0.9)" d="M0,220L80,210C160,200,320,180,480,185C640,190,800,220,960,235C1120,250,1280,250,1360,250L1440,250L1440,400L1360,400C1280,400,1120,400,960,400C800,400,640,400,480,400C320,400,160,400,80,400L0,400Z"></path>
-            <path fill="#eef4f9" d="M0,300L120,280C240,260,480,220,720,215C960,210,1200,240,1320,255L1440,270L1440,400L1320,400C1200,400,960,400,720,400C480,400,240,400,120,400L0,400Z"></path>
-          </svg>
-        </div>
-      </div>
-
-      {/* HEADER */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-4 bg-[#eef4f9] border-b border-blue-200/50 shadow-md' : 'py-6 bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-center items-center">
-          <nav className="hidden md:flex items-center gap-10 text-sm tracking-wider text-slate-600">
-            {['Что делает', 'Как это работает', 'Анатомия', 'Запуск', 'Преимущества'].map((item, idx) => (
-              <button 
-                key={idx} 
-                onClick={() => scrollToSection(`section-${idx}`)}
-                className="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
-          {/* Mobile menu hint */}
-          <div className="md:hidden text-sm tracking-widest uppercase font-medium">VOCTA</div>
-        </div>
-      </header>
-
-      <main className="pb-24 px-6 max-w-7xl mx-auto flex flex-col items-center overflow-hidden relative z-20">
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audioEl.pause();
+        isPlaying = false;
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        audioBg.classList.remove('opacity-100');
         
-        {/* 2. HERO SECTION */}
-        <section className="w-full min-h-screen flex flex-col items-center justify-center text-center relative pt-20">
-          <h1 className="text-7xl md:text-9xl font-extralight tracking-[0.15em] mb-6 text-slate-900 drop-shadow-md">
-            VOCTA
-          </h1>
-          <p className="text-xl md:text-2xl font-light tracking-wide text-slate-800 max-w-2xl drop-shadow-sm">
-            лучший сотрудник для твоего бизнеса
-          </p>
-          <div className="mt-16 animate-bounce opacity-60">
-            <div className="w-[1px] h-20 bg-gradient-to-b from-transparent via-slate-500 to-transparent mx-auto"></div>
-          </div>
-        </section>
+        clearInterval(waveInterval);
+        waveformHeights = waveformHeights.map(() => Math.random() * 15 + 10); // Спокойная волна
+        updateWaveVisuals();
+      } else {
+        audioEl.play();
+        isPlaying = true;
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        audioBg.classList.add('opacity-100');
+        
+        waveInterval = setInterval(() => {
+          waveformHeights = waveformHeights.map(() => Math.random() * 80 + 20); // Прыгающая волна
+          updateWaveVisuals();
+        }, 150);
+      }
+    });
 
-        {/* 3. WHAT IT DOES */}
-        <section id="section-0" className="w-full pt-8 pb-20 scroll-mt-16">
-          <h2 className="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Что делает ваш новый сотрудник</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-            <GlassCard className="p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
-              <Zap strokeWidth={1} className="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500" />
-              <h3 className="text-xl font-medium tracking-wide">Моментально отвечает всем вашим клиентам</h3>
-              <p className="text-slate-600 leading-relaxed font-light">Клиентам не нужно ждать, пока менеджер освободится.</p>
-            </GlassCard>
-            <GlassCard className="p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
-              <CheckCircle2 strokeWidth={1} className="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500" />
-              <h3 className="text-xl font-medium tracking-wide">Квалифицирует вашу заявку</h3>
-              <p className="text-slate-600 leading-relaxed font-light">Менеджер перезвонит уже с решением. А весь спам отметается, чтобы не тратить на него время.</p>
-            </GlassCard>
-            <GlassCard className="p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
-              <BrainCircuit strokeWidth={1} className="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500" />
-              <h3 className="text-xl font-medium tracking-wide">Общается и рассуждает</h3>
-              <p className="text-slate-600 leading-relaxed font-light">Отвечает на вопросы клиентов, понимая, о чем спрашивают его. Не использует скрипты, а думает и отвечает моментально.</p>
-            </GlassCard>
-            <GlassCard className="p-10 rounded-[2rem] flex flex-col gap-4 group hover:bg-white/30 transition-all duration-500">
-              <Clock strokeWidth={1} className="w-10 h-10 text-blue-400 mb-2 group-hover:scale-110 transition-transform duration-500" />
-              <h3 className="text-xl font-medium tracking-wide">Работает 24/7</h3>
-              <p className="text-slate-600 leading-relaxed font-light">Все клиенты получат ответ вне зависимости от графика работы компании.</p>
-            </GlassCard>
-          </div>
-        </section>
+    audioEl.addEventListener('timeupdate', () => {
+      const current = audioEl.currentTime;
+      const total = audioEl.duration || 1;
+      audioProgress = (current / total) * 100;
+      updateWaveVisuals();
+    });
 
-        {/* 3.5 AUDIO DEMO SECTION */}
-        <section className="w-full pb-20 pt-8 flex flex-col items-center relative z-30">
-          <h2 className="text-2xl md:text-3xl font-light text-center mb-4 tracking-wide text-slate-800">Кейс работы нейро-сотрудника</h2>
-          <p className="text-center text-slate-600 font-light mb-10 max-w-2xl">
-            Консультация клиента по вопросам экологической документации, квалификация ЛИДа, запись на консультацию.
-          </p>
-          {/* Сюда передается ссылка на ваш аудиофайл (сейчас стоит тестовый mp3) */}
-          <AudioPlayer src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
-        </section>
+    audioEl.addEventListener('ended', () => {
+      isPlaying = false;
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      audioBg.classList.remove('opacity-100');
+      clearInterval(waveInterval);
+      waveformHeights = waveformHeights.map(() => 15);
+      audioProgress = 0;
+      updateWaveVisuals();
+    });
 
-        {/* 4. HOW IT WORKS & INFOGRAPHIC */}
-        {/* Перенесли ref={comparisonRef} сюда, в начало секции */}
-        <section id="section-1" ref={comparisonRef} className="w-full pt-8 pb-20 scroll-mt-16">
-          <h2 className="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Как это работает?</h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            
-            {/* Text side - REDESIGNED */}
-            <div className="flex flex-col gap-6 w-full">
-              <GlassCard className={`p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '100ms' }}>
-                <div className="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
-                  <Zap className="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-medium mb-2 text-slate-800 tracking-wide">Мгновенная реакция</h4>
-                  <p className="text-slate-600 font-light text-sm md:text-base leading-relaxed">
-                    Когда клиент звонит в вашу компанию, нейро-сотрудник <span className="font-medium text-slate-800">моментально отвечает</span> как живой человек и начинает вести клиента по диалогу. Клиенту не надо нажимать клавиши для выбора ответа, диктовать цель обращения или ждать на линии.
-                  </p>
-                </div>
-              </GlassCard>
+    waveformContainer.addEventListener('click', (e) => {
+      const bounds = waveformContainer.getBoundingClientRect();
+      const percent = (e.clientX - bounds.left) / bounds.width;
+      audioEl.currentTime = percent * audioEl.duration;
+      audioProgress = percent * 100;
+      updateWaveVisuals();
+    });
 
-              <GlassCard className={`p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '300ms' }}>
-                <div className="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
-                  <BrainCircuit className="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-medium mb-2 text-slate-800 tracking-wide">Естественный диалог</h4>
-                  <p className="text-slate-600 font-light text-sm md:text-base leading-relaxed">
-                    Нейро-сотрудник общается как живой человек, понимает собеседника и естественно отвечает на вопросы, <span className="font-medium text-slate-800">понимая логику диалога</span>.
-                  </p>
-                </div>
-              </GlassCard>
+    // 7. ИИ Генератор (Gemini API)
+    const apiKey = ""; // Ключ API предоставляется средой выполнения
+    const nicheInput = document.getElementById('niche-input');
+    const generateBtn = document.getElementById('generate-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoader = document.getElementById('btn-loader');
+    const resultWrapper = document.getElementById('result-wrapper');
+    const resultText = document.getElementById('result-text');
 
-              <GlassCard className={`p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform ${comparisonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '500ms' }}>
-                <div className="w-12 h-12 rounded-full bg-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200/50 group-hover:scale-110 transition-transform duration-500">
-                  <Network className="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-medium mb-2 text-slate-800 tracking-wide">Автоматизация данных</h4>
-                  <p className="text-slate-600 font-light text-sm md:text-base leading-relaxed">
-                    Он не упустит ни одной детали и зафиксирует их, для передачи менеджеру компании через <span className="font-medium text-slate-800">автоматизированную инфраструктуру</span>.
-                  </p>
-                </div>
-              </GlassCard>
-            </div>
+    async function callGeminiAPI(userText, systemText) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{ parts: [{ text: userText }] }],
+        systemInstruction: { parts: [{ text: systemText }] }
+      };
 
-            {/* Infographic side - AUTONOMOUS ANIMATIONS */}
-            {/* Убрали ref отсюда */}
-            <div className="flex flex-col gap-8 w-full">
-              
-              {/* Human Bar */}
-              <div className="flex flex-col gap-2">
-                <span className={`text-xs uppercase tracking-widest text-slate-500 ml-2 transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '100ms' }}>Живой оператор</span>
-                <GlassCard className={`p-2 rounded-full flex gap-1 h-14 w-full transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100 bg-white/20' : 'opacity-0 bg-transparent border-transparent shadow-none'}`} style={{ transitionDelay: '200ms' }}>
-                  <div className={`bg-blue-200/40 w-[15%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '300ms' }}>Гудки</div>
-                  <div className={`bg-blue-300/40 w-[40%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-2 leading-tight transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '500ms' }}>«Сейчас все операторы заняты...»</div>
-                  <div className={`bg-blue-400/40 flex-grow rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-700 font-medium backdrop-blur-sm transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '700ms' }}>Диалог</div>
-                </GlassCard>
-              </div>
+      const delays = [1000, 2000, 4000, 8000, 16000];
+      for (let attempt = 0; attempt < 6; attempt++) {
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Извините, произошла ошибка при генерации ответа.";
+        } catch (error) {
+          if (attempt === 5) return "Ошибка подключения к ИИ. Пожалуйста, попробуйте позже.";
+          await new Promise(resolve => setTimeout(resolve, delays[attempt]));
+        }
+      }
+    }
 
-              {/* Old Bot Bar */}
-              <div className="flex flex-col gap-2">
-                <span className={`text-xs uppercase tracking-widest text-slate-500 ml-2 transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '300ms' }}>Старый автоответчик</span>
-                <GlassCard className={`p-2 rounded-full flex gap-1 h-14 w-full transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100 bg-white/20' : 'opacity-0 bg-transparent border-transparent shadow-none'}`} style={{ transitionDelay: '400ms' }}>
-                  <div className={`bg-blue-200/30 w-[10%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '500ms' }}>Гудки</div>
-                  <div className={`bg-blue-300/30 w-[25%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '700ms' }}>Прослушать меню</div>
-                  <div className={`bg-blue-400/30 w-[15%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '900ms' }}>Нажать цифру</div>
-                  <div className={`bg-blue-500/30 w-[20%] rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-600 backdrop-blur-sm text-center px-1 leading-tight transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '1100ms' }}>Ожидание</div>
-                  <div className={`bg-blue-600/30 flex-grow rounded-full flex items-center justify-center text-[10px] md:text-xs text-slate-700 font-medium backdrop-blur-sm transition-all duration-700 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-4 scale-95'}`} style={{ transitionDelay: '1300ms' }}>Диалог</div>
-                </GlassCard>
-              </div>
+    async function handleGenerateScript() {
+      const niche = nicheInput.value.trim();
+      if (!niche) return;
 
-              {/* VOCTA Bar */}
-              <div className="flex flex-col gap-2 transform transition-transform hover:scale-[1.02] duration-300">
-                <span className={`text-xs uppercase tracking-widest text-blue-500 font-medium ml-2 transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '800ms' }}>VOCTA</span>
-                <GlassCard className={`p-2 rounded-full flex gap-1 h-16 w-full border-teal-200/50 shadow-[0_0_30px_rgba(45,212,191,0.2)] transition-all duration-700 ease-out ${comparisonVisible ? 'opacity-100 bg-white/40' : 'opacity-0 bg-transparent shadow-none border-transparent'}`} style={{ transitionDelay: '900ms' }}>
-                  <div className={`bg-gradient-to-r from-teal-200/60 to-emerald-300/60 w-full rounded-full flex items-center justify-center text-sm md:text-base text-teal-900 font-medium tracking-wide backdrop-blur-md transition-all duration-1000 ease-out transform ${comparisonVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-10 scale-95'}`} style={{ transitionDelay: '1100ms' }}>
-                    Мгновенное решение вопроса
-                  </div>
-                </GlassCard>
-              </div>
+      // Loading state
+      generateBtn.disabled = true;
+      btnText.classList.add('hidden');
+      btnLoader.classList.remove('hidden');
+      resultWrapper.classList.add('hidden');
+      resultText.textContent = '';
+      
+      const prompt = `Напиши короткий, реалистичный пример диалога по телефону (на русском языке) между ИИ-ассистентом VOCTA и клиентом для бизнеса: ${niche}. 
+      Диалог должен показывать, как круто VOCTA квалифицирует лида, отвечает на вопросы без скрипта и закрывает сделку/записывает на прием. 
+      Формат: 
+      Клиент: [реплика]
+      VOCTA: [умный ответ ИИ]. 
+      Максимум 4-5 обменов репликами. Без лишних вступлений.`;
+      
+      const systemInstruction = "Ты эксперт по продажам и копирайтер, создающий продающие сценарии для ИИ ассистентов.";
+      
+      const response = await callGeminiAPI(prompt, systemInstruction);
+      
+      // Update UI with result
+      resultText.textContent = response;
+      resultWrapper.classList.remove('hidden');
+      
+      // Reset loading state
+      generateBtn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+    }
 
-            </div>
-          </div>
-        </section>
+    generateBtn.addEventListener('click', handleGenerateScript);
+    nicheInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleGenerateScript();
+    });
 
-        {/* 4.5 ИИ ГЕНЕРАТОР СЦЕНАРИЕВ (Gemini Feature) */}
-        <section className="w-full py-16 flex flex-col items-center">
-          <GlassCard className="w-full max-w-4xl p-8 md:p-12 rounded-[2.5rem] bg-white/30 border-white/60 relative overflow-hidden">
-            {/* Декоративный блеск */}
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-300/20 blur-[50px] rounded-full"></div>
-            
-            <div className="flex flex-col items-center text-center relative z-10">
-              <Sparkles strokeWidth={1} className="w-10 h-10 text-blue-500 mb-4" />
-              <h2 className="text-2xl md:text-3xl font-light mb-4 tracking-wide">Примерьте VOCTA на свой бизнес</h2>
-              <p className="text-slate-600 font-light mb-8 max-w-2xl">
-                Узнайте, как наш ИИ будет общаться именно с вашими клиентами. Введите сферу вашей деятельности, и нейросеть сгенерирует пример идеального диалога.
-              </p>
-              
-              <div className="flex flex-col md:flex-row gap-4 w-full max-w-2xl mb-8">
-                <input 
-                  type="text" 
-                  value={niche}
-                  onChange={(e) => setNiche(e.target.value)}
-                  placeholder="Например: Автосервис, Стоматология, Недвижимость..." 
-                  className="flex-grow bg-white/40 border border-white/60 focus:border-blue-400 rounded-full px-6 py-4 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors"
-                  onKeyDown={(e) => e.key === 'Enter' && handleGenerateScript()}
-                />
-                <GlassButton 
-                  onClick={handleGenerateScript}
-                  className="justify-center bg-blue-50/50 hover:bg-blue-100/50 border-blue-200/50"
-                >
-                  {isScriptLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "✨ Сгенерировать"}
-                </GlassButton>
-              </div>
-
-              {generatedScript && (
-                <div className="w-full max-w-3xl text-left bg-white/40 border border-white/50 p-6 md:p-8 rounded-3xl backdrop-blur-sm shadow-[0_4px_20px_rgba(0,0,0,0.02)] animate-in fade-in slide-in-from-bottom-4 duration-700">
-                  <div className="text-xs uppercase tracking-widest text-blue-500 font-medium mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" /> Сценарий готов
-                  </div>
-                  <div className="space-y-4 text-slate-700 font-light leading-relaxed whitespace-pre-wrap">
-                    {generatedScript}
-                  </div>
-                </div>
-              )}
-            </div>
-          </GlassCard>
-        </section>
-
-        {/* 5. ANATOMY PUZZLE (Animated Digital Brain) */}
-        <section id="section-2" ref={anatomyRef} className="w-full pt-8 pb-20 scroll-mt-16 flex flex-col items-center overflow-hidden">
-          <h2 className="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Из чего состоит ваш новый сотрудник</h2>
-          
-          <div className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center place-items-center">
-
-            {/* Левая колонка компонентов */}
-            <div className="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
-              <div className={`bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform ${anatomyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0'}`} style={{ transitionDelay: '100ms' }}>
-                <Activity strokeWidth={1.5} className="w-10 h-10 text-blue-500" />
-                <h3 className="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Voice</h3>
-                <p className="text-slate-600 font-light text-sm">Понимает речь клиента</p>
-              </div>
-
-              <div className={`bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform ${anatomyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0'}`} style={{ transitionDelay: '300ms' }}>
-                <Network strokeWidth={1.5} className="w-10 h-10 text-blue-500" />
-                <h3 className="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA API</h3>
-                <p className="text-slate-600 font-light text-sm">Отвечает за автоматизацию получения готовых ЛИДов</p>
-              </div>
-            </div>
-
-            {/* Центральный мозг ИИ */}
-            <div className={`order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out transform ${anatomyVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} style={{ transitionDelay: '500ms' }}>
-                {/* Соединительные линии (видны на десктопе) */}
-                <div className="absolute top-1/2 left-[-30%] right-[-30%] h-[1px] bg-gradient-to-r from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
-                <div className="absolute left-1/2 top-[-30%] bottom-[-30%] w-[1px] bg-gradient-to-b from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
-
-                {/* Вращающиеся кольца ядра */}
-                <div className="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite]"></div>
-                <div className="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse]"></div>
-                
-                {/* Пульсирующая сердцевина */}
-                <div className="absolute inset-12 rounded-full bg-gradient-to-tr from-blue-300/30 to-white/40 backdrop-blur-md shadow-[0_0_80px_rgba(59,130,246,0.5)] animate-pulse"></div>
-                
-                {/* Иконка мозга */}
-                <BrainCircuit className="w-20 h-20 md:w-24 md:h-24 text-blue-500 relative z-10 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]" strokeWidth={1} />
-            </div>
-
-            {/* Правая колонка компонентов */}
-            <div className="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
-              <div className={`bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform ${anatomyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0'}`} style={{ transitionDelay: '700ms' }}>
-                <BrainCircuit strokeWidth={1.5} className="w-10 h-10 text-blue-500" />
-                <h3 className="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Think</h3>
-                <p className="text-slate-600 font-light text-sm">Думает как лучше ответить клиенту</p>
-              </div>
-
-              <div className={`bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform ${anatomyVisible ? 'opacity-100 translate-x-0' : 'opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0'}`} style={{ transitionDelay: '900ms' }}>
-                <ShieldCheck strokeWidth={1.5} className="w-10 h-10 text-blue-500" />
-                <h3 className="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Secure</h3>
-                <p className="text-slate-600 font-light text-sm">Обеспечивает безопасность вашего бюджета</p>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* 6. LAUNCH TIMELINE */}
-        <section id="section-3" className="w-full pt-8 pb-20 scroll-mt-16">
-          <h2 className="text-3xl md:text-4xl font-light text-center mb-20 tracking-wide">Процесс запуска</h2>
-          
-          <div className="relative max-w-4xl mx-auto">
-            {/* Central Line */}
-            <div className="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-200 via-blue-300 to-transparent transform md:-translate-x-1/2"></div>
-            
-            {[
-              {
-                title: "Ваша задача",
-                desc: "Проведем встречу, где обсудим задачу, которую должен выполнять ваш нейро-сотрудник."
-              },
-              {
-                title: "Решение задачи",
-                desc: "Используя опыт более 14-ти лет продаж в банковской сфере, предложим вариант диалога для вашего нейро-сотрудника для решения бизнес задачи."
-              },
-              {
-                title: "Обучение",
-                desc: "Обучим нейро-сотрудника общаться с клиентом, для решения бизнес задачи: отвечать на вопросы, предлагать товар или услугу, отрабатывать возражения, собирать данные клиентов и передавать их Вам."
-              },
-              {
-                title: "Тестирование",
-                desc: "Проведем тестирование в «полевых условиях», чтобы ваш сотрудник эффективно выполнял свою задачу."
-              },
-              {
-                title: "Запуск",
-                desc: "После успешного прохождения тестирования, мы запускаем вашего нейро-сотрудника и настраиваем автоматизированную инфраструктуру, чтобы вы получали готовых к продаже клиентов."
-              },
-              {
-                title: "Развитие",
-                desc: "Будем следить, чтобы ваш сотрудник непрерывно развивался, повышая свою эффективность."
-              }
-            ].map((step, idx) => (
-              <div key={idx} className={`relative flex items-start mb-12 last:mb-0 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                
-                {/* Dot */}
-                <div className="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-                
-                {/* Content Card Wrapper */}
-                <div className={`ml-16 md:ml-0 w-full md:w-1/2 ${idx % 2 === 0 ? 'md:pr-16 text-left md:text-right' : 'md:pl-16 text-left'}`}>
-                  <GlassCard className="p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-                    <div className="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 0{idx + 1}</div>
-                    <h3 className="text-xl font-medium tracking-wide mb-3">{step.title}</h3>
-                    <p className="text-slate-600 font-light leading-relaxed text-sm md:text-base">{step.desc}</p>
-                  </GlassCard>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 7. BENEFITS */}
-        <section id="section-4" className="w-full pt-8 pb-20 scroll-mt-16 max-w-4xl mx-auto">
-          <GlassCard className="p-10 md:p-16 rounded-[3rem] border-white/70 bg-white/30">
-            <h2 className="text-3xl md:text-4xl font-light text-center mb-12 tracking-wide">Почему нейро-сотрудник вам нужен</h2>
-            
-            <ul className="space-y-6">
-              {[
-                "Сокращает ожидание клиента на 98% по сравнению с оператором и автоответчиком.",
-                "Вопрос клиента решается быстрее, потому что нейро-сотрудник реагирует в диалоге быстрее человека.",
-                "Минимизирует раздражение клиента из-за прослушивания автоответчика.",
-                "Позволяет вашей компании оставаться на связи 24/7.",
-                "Сокращает количество ошибок, которые возникают по вине человека."
-              ].map((benefit, idx) => (
-                <li key={idx} className="flex items-start gap-4">
-                  <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-blue-100/50 flex items-center justify-center border border-blue-200/50 backdrop-blur-sm">
-                    <ChevronRight strokeWidth={2} className="w-3 h-3 text-blue-500" />
-                  </div>
-                  <p className="text-lg text-slate-700 font-light leading-relaxed">{benefit}</p>
-                </li>
-              ))}
-            </ul>
-          </GlassCard>
-        </section>
-
-        {/* 8. CALL TO ACTION */}
-        <section className="w-full py-20 flex justify-center text-center">
-          <GlassButton 
-            className="text-base md:text-lg px-10 py-5 rounded-[2.5rem] bg-white/40 border-white/80 hover:bg-white/60 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] scale-100 hover:scale-105"
-            onClick={() => alert("Форма захвата лидов будет открыта здесь")}
-          >
-            Нанять своего лучшего сотрудника
-          </GlassButton>
-        </section>
-
-      </main>
-
-      {/* Minimal Footer */}
-      <footer className="w-full py-8 border-t border-white/30 backdrop-blur-md bg-white/10 text-center relative z-20">
-        <p className="text-xs tracking-widest text-slate-500 font-light">© {new Date().getFullYear()} VOCTA. ALL RIGHTS RESERVED.</p>
-      </footer>
-
-      {/* Scroll to Top Button */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-50 p-3 rounded-full bg-white/30 backdrop-blur-xl border border-white/60 shadow-[0_4px_20px_rgba(0,0,0,0.1)] text-slate-700 hover:text-blue-500 hover:bg-white/50 transition-all duration-500 transform ${
-          showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'
-        }`}
-        aria-label="Наверх"
-      >
-        <ChevronUp className="w-6 h-6" />
-      </button>
-
-    </div>
-  );
-};
-
-export default App;
+  </script>
+</body>
+</html>

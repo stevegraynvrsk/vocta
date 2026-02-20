@@ -28,6 +28,12 @@
       background: rgba(147, 197, 253, 0.5);
       border-radius: 10px;
     }
+    
+    /* Класс для аппаратного ускорения анимированных элементов */
+    .gpu-accel {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
   </style>
 </head>
 <body class="min-h-screen font-sans text-slate-800 font-light selection:bg-blue-100 selection:text-blue-900 bg-[#eef4f9] relative">
@@ -306,7 +312,7 @@
           </div>
         </div>
 
-        <!-- Центральный мозг ИИ (Оптимизированный) -->
+        <!-- Центральный мозг ИИ -->
         <div class="anim-target gpu-accel order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out opacity-0 scale-75" data-hide="opacity-0 scale-75" data-show="opacity-100 scale-100" style="transition-delay: 500ms;">
             <!-- Соединительные линии -->
             <div class="absolute top-1/2 left-[-30%] right-[-30%] h-[1px] bg-gradient-to-r from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
@@ -344,7 +350,7 @@
     <!-- 6. LAUNCH TIMELINE -->
     <section id="section-3" class="w-full mt-12 md:mt-24 pt-16 pb-24 scroll-mt-16 relative overflow-hidden">
       
-      <!-- Декоративные фоновые элементы (Ледяные волны в едином стиле сайта) -->
+      <!-- Декоративные фоновые элементы -->
       <div class="absolute inset-0 pointer-events-none -z-10 flex items-end opacity-60">
         <svg viewBox="0 0 1440 400" class="w-full h-[60%] md:h-[120%] drop-shadow-[0_-10px_20px_rgba(255,255,255,0.2)]" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="rgba(255, 255, 255, 0.4)" d="M0,150L60,160C120,170,240,190,360,195C480,200,600,190,720,165C840,140,960,100,1080,95C1200,90,1320,120,1380,135L1440,150L1440,400L1380,400C1320,400,1200,400,1080,400C960,400,840,400,720,400C600,400,480,400,360,400C240,400,120,400,60,400L0,400Z"></path>
@@ -462,10 +468,11 @@
     </section>
 
     <!-- 8. CALL TO ACTION -->
-    <section class="w-full py-20 flex justify-center text-center">
+    <section class="w-full py-20 flex justify-center text-center relative z-10">
       <button 
-        onclick="alert('Форма захвата лидов будет открыта здесь')"
-        class="px-10 py-5 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/80 hover:bg-white/60 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] text-base md:text-lg tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 scale-100 hover:scale-105"
+        id="main-cta-btn"
+        onclick="openModal()"
+        class="px-10 py-5 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/80 hover:bg-white/60 transition-all duration-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] text-base md:text-lg tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 scale-100 hover:scale-105"
       >
         Нанять своего лучшего сотрудника
       </button>
@@ -488,6 +495,72 @@
     <i data-lucide="chevron-up" class="w-6 h-6"></i>
   </button>
 
+  <!-- MODAL: Form Overlay -->
+  <div id="lead-modal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm" id="modal-backdrop" onclick="closeModal()"></div>
+    
+    <!-- Modal Content -->
+    <div id="modal-content" class="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-2xl rounded-[2.5rem] w-[90%] max-w-md p-8 relative transform scale-95 transition-transform duration-500 z-10 overflow-visible">
+      <!-- Glow effects -->
+      <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-400/20 blur-[50px] rounded-full pointer-events-none -z-10"></div>
+      <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-teal-400/20 blur-[50px] rounded-full pointer-events-none -z-10"></div>
+
+      <!-- Close Btn -->
+      <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-800 transition-colors z-20">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <!-- Form Container -->
+      <div id="form-container" class="relative z-10">
+        <h3 class="text-2xl font-medium text-slate-800 mb-2 tracking-wide">Нанять VOCTA</h3>
+        <p class="text-slate-600 font-light text-sm mb-6 leading-relaxed">Оставьте контакты, и мы свяжемся с вами в течение 15 минут, чтобы обсудить внедрение.</p>
+        
+        <form id="lead-form" class="space-y-4">
+          <div>
+            <input type="text" required placeholder="Ваше имя" class="w-full bg-white/60 border border-white/80 focus:border-blue-400 rounded-2xl px-5 py-3 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors">
+          </div>
+          <div>
+            <!-- Поле для маски телефона -->
+            <input type="tel" id="phone-input" required placeholder="+7 000 000-00-00" class="w-full bg-white/60 border border-white/80 focus:border-blue-400 rounded-2xl px-5 py-3 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors">
+          </div>
+          
+          <!-- КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК -->
+          <div class="relative" id="custom-select-container">
+            <input type="hidden" id="task-input" name="task" required>
+            <div id="custom-select-trigger" class="w-full bg-white/60 border border-white/80 hover:border-blue-400 rounded-2xl px-5 py-3 outline-none backdrop-blur-md text-slate-500 font-light shadow-inner transition-colors cursor-pointer flex justify-between items-center">
+              <span id="custom-select-text">Какую задачу нужно решить?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-300" id="custom-select-icon"></i>
+            </div>
+            
+            <ul id="custom-select-dropdown" class="absolute z-50 w-full mt-2 bg-white/90 backdrop-blur-2xl border border-white/80 rounded-2xl shadow-xl overflow-hidden opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-300">
+              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="inbound">Входящие звонки</li>
+              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="outbound">Обзвон базы</li>
+              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="consulting">Консультирование</li>
+              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors" data-value="other">Не уверен, нужна консультация</li>
+            </ul>
+          </div>
+
+          <button type="submit" id="submit-btn" class="w-full px-8 py-4 mt-2 rounded-2xl bg-blue-500 hover:bg-blue-600 transition-all duration-300 shadow-[0_8px_20px_rgba(59,130,246,0.3)] hover:shadow-[0_8px_25px_rgba(59,130,246,0.5)] hover:-translate-y-1 text-white text-sm tracking-widest uppercase font-medium flex justify-center items-center gap-2">
+            <i id="submit-loader" data-lucide="loader-2" class="w-5 h-5 animate-spin hidden"></i>
+            <span id="submit-text">Обсудить проект</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Success Message (Hidden initially) -->
+      <div id="success-container" class="hidden flex-col items-center text-center py-6 relative z-10 animate-in fade-in zoom-in duration-500">
+        <div class="w-16 h-16 rounded-full bg-green-100 border border-green-200 flex items-center justify-center mb-4 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+          <i data-lucide="check" style="stroke-width: 3px;" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-2xl font-medium text-slate-800 mb-2">Отлично!</h3>
+        <p class="text-slate-600 font-light text-sm leading-relaxed mb-6">Мы получили вашу заявку и скоро свяжемся с вами для обсуждения деталей.</p>
+        <button onclick="closeModal()" class="px-8 py-3 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-600 font-medium transition-colors text-sm tracking-wider uppercase">Закрыть</button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Vanilla JS Script -->
   <script>
     // 1. Инициализация иконок Lucide
@@ -499,24 +572,29 @@
     // 3. Логика скролла (Шапка и кнопка наверх)
     const header = document.getElementById('main-header');
     const scrollTopBtn = document.getElementById('scroll-to-top');
+    let isScrolling = false;
 
     window.addEventListener('scroll', () => {
-      // Обновление шапки
-      if (window.scrollY > 50) {
-        header.classList.add('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
-        header.classList.remove('py-6', 'bg-transparent');
-      } else {
-        header.classList.remove('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
-        header.classList.add('py-6', 'bg-transparent');
-      }
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          if (window.scrollY > 50) {
+            header.classList.add('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
+            header.classList.remove('py-6', 'bg-transparent');
+          } else {
+            header.classList.remove('py-4', 'bg-[#eef4f9]', 'border-b', 'border-blue-200/50', 'shadow-md');
+            header.classList.add('py-6', 'bg-transparent');
+          }
 
-      // Обновление кнопки наверх
-      if (window.scrollY > 400) {
-        scrollTopBtn.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
-        scrollTopBtn.classList.add('translate-y-0', 'opacity-100');
-      } else {
-        scrollTopBtn.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
-        scrollTopBtn.classList.remove('translate-y-0', 'opacity-100');
+          if (window.scrollY > 400) {
+            scrollTopBtn.classList.remove('translate-y-16', 'opacity-0', 'pointer-events-none');
+            scrollTopBtn.classList.add('translate-y-0', 'opacity-100');
+          } else {
+            scrollTopBtn.classList.add('translate-y-16', 'opacity-0', 'pointer-events-none');
+            scrollTopBtn.classList.remove('translate-y-0', 'opacity-100');
+          }
+          isScrolling = false;
+        });
+        isScrolling = true;
       }
     });
 
@@ -544,18 +622,16 @@
             if(hideClasses.length) t.classList.remove(...hideClasses);
             if(showClasses.length) t.classList.add(...showClasses);
           });
-          animObserver.unobserve(entry.target); // Анимация проигрывается 1 раз
+          animObserver.unobserve(entry.target);
         }
       });
     }, { threshold: 0.15 });
 
     const section1 = document.getElementById('section-1');
     const section2 = document.getElementById('section-2');
+    const section3 = document.getElementById('section-3');
     if(section1) animObserver.observe(section1);
     if(section2) animObserver.observe(section2);
-
-    // Добавлено наблюдение за section-3, чтобы новые карточки "Процесс запуска" выезжали при прокрутке
-    const section3 = document.getElementById('section-3');
     if(section3) animObserver.observe(section3);
 
     // 6. Аудиоплеер и живая волна эквалайзера
@@ -571,7 +647,6 @@
     let waveformHeights = Array(60).fill(15);
     let waveInterval;
 
-    // Инициализация столбиков волны
     for (let i = 0; i < 60; i++) {
       const bar = document.createElement('div');
       bar.className = 'wave-bar w-1 md:w-[6px] rounded-full transition-all duration-150 ease-in-out bg-blue-200/50 group-hover/wave:bg-blue-300/60';
@@ -603,7 +678,7 @@
         audioBg.classList.remove('opacity-100');
         
         clearInterval(waveInterval);
-        waveformHeights = waveformHeights.map(() => Math.random() * 15 + 10); // Спокойная волна
+        waveformHeights = waveformHeights.map(() => Math.random() * 15 + 10);
         updateWaveVisuals();
       } else {
         audioEl.play();
@@ -613,7 +688,7 @@
         audioBg.classList.add('opacity-100');
         
         waveInterval = setInterval(() => {
-          waveformHeights = waveformHeights.map(() => Math.random() * 80 + 20); // Прыгающая волна
+          waveformHeights = waveformHeights.map(() => Math.random() * 80 + 20);
           updateWaveVisuals();
         }, 150);
       }
@@ -643,6 +718,164 @@
       audioEl.currentTime = percent * audioEl.duration;
       audioProgress = percent * 100;
       updateWaveVisuals();
+    });
+
+    // 7. Логика Модального Окна (Lead Form)
+    const modal = document.getElementById('lead-modal');
+    const modalContent = document.getElementById('modal-content');
+    const formContainer = document.getElementById('form-container');
+    const successContainer = document.getElementById('success-container');
+    const leadForm = document.getElementById('lead-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    const submitLoader = document.getElementById('submit-loader');
+    const mainCtaBtn = document.getElementById('main-cta-btn'); // Кнопка призыва
+
+    function openModal() {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('scale-95');
+      modalContent.classList.add('scale-100');
+      document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
+      
+      // Прячем основную кнопку, чтобы она не просвечивала через форму
+      if (mainCtaBtn) {
+        mainCtaBtn.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function closeModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContent.classList.remove('scale-100');
+      modalContent.classList.add('scale-95');
+      document.body.style.overflow = ''; // Возвращаем скролл
+      
+      // Возвращаем основную кнопку на место
+      if (mainCtaBtn) {
+        mainCtaBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+      
+      // Сброс формы через 500мс (когда анимация закрытия завершится)
+      setTimeout(() => {
+        leadForm.reset();
+        formContainer.classList.remove('hidden');
+        successContainer.classList.add('hidden');
+        successContainer.classList.remove('flex');
+        
+        submitBtn.disabled = false;
+        submitText.classList.remove('hidden');
+        submitLoader.classList.add('hidden');
+
+        // Сброс кастомного селекта
+        document.getElementById('custom-select-text').textContent = 'Какую задачу нужно решить?';
+        document.getElementById('custom-select-text').classList.add('text-slate-500');
+        document.getElementById('custom-select-text').classList.remove('text-slate-800');
+        document.getElementById('task-input').value = '';
+      }, 500);
+    }
+
+    // Обработка отправки формы
+    leadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Показываем состояние загрузки
+      submitBtn.disabled = true;
+      submitText.classList.add('hidden');
+      submitLoader.classList.remove('hidden');
+
+      // Имитируем отправку данных на сервер (задержка 1.5 секунды)
+      setTimeout(() => {
+        formContainer.classList.add('hidden');
+        successContainer.classList.remove('hidden');
+        successContainer.classList.add('flex');
+      }, 1500);
+    });
+
+    // 8. Маска телефона (+7 000 000-00-00)
+    const phoneInput = document.getElementById('phone-input');
+    
+    phoneInput.addEventListener('input', function (e) {
+      let val = e.target.value.replace(/\D/g, ''); // Оставляем только цифры
+      
+      // Если юзер вставил номер начиная с 7 или 8, убираем ее, так как +7 всегда в начале
+      if (val.startsWith('7') || val.startsWith('8')) {
+        val = val.substring(1);
+      }
+      
+      if (val.length === 0) {
+        e.target.value = '';
+        return;
+      }
+
+      // Применяем маску
+      let formatted = '+7 ';
+      if (val.length > 0) formatted += val.substring(0, 3);
+      if (val.length >= 4) formatted += ' ' + val.substring(3, 6);
+      if (val.length >= 7) formatted += '-' + val.substring(6, 8);
+      if (val.length >= 9) formatted += '-' + val.substring(8, 10);
+      
+      e.target.value = formatted;
+    });
+
+    // Добавляем +7 при фокусе, если поле пустое
+    phoneInput.addEventListener('focus', function(e) {
+      if(e.target.value === '') e.target.value = '+7 ';
+    });
+    
+    // Убираем +7 при потере фокуса, если пользователь передумал вводить
+    phoneInput.addEventListener('blur', function(e) {
+      if(e.target.value === '+7 ' || e.target.value === '+7') e.target.value = '';
+    });
+
+    // 9. Кастомный выпадающий список (Select)
+    const selectTrigger = document.getElementById('custom-select-trigger');
+    const selectDropdown = document.getElementById('custom-select-dropdown');
+    const selectText = document.getElementById('custom-select-text');
+    const taskInput = document.getElementById('task-input');
+    const selectIcon = document.getElementById('custom-select-icon');
+    const selectOptions = selectDropdown.querySelectorAll('li');
+
+    function openCustomSelect() {
+      selectDropdown.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+      selectIcon.classList.add('rotate-180');
+    }
+
+    function closeCustomSelect() {
+      selectDropdown.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+      selectIcon.classList.remove('rotate-180');
+    }
+
+    // Открытие/закрытие по клику
+    selectTrigger.addEventListener('click', (e) => {
+      e.stopPropagation(); // Предотвращаем закрытие по клику на весь документ
+      const isOpen = !selectDropdown.classList.contains('opacity-0');
+      if (isOpen) {
+        closeCustomSelect();
+      } else {
+        openCustomSelect();
+      }
+    });
+
+    // Выбор опции
+    selectOptions.forEach(option => {
+      option.addEventListener('click', (e) => {
+        const value = e.target.getAttribute('data-value');
+        const text = e.target.textContent;
+        
+        selectText.textContent = text;
+        selectText.classList.remove('text-slate-500');
+        selectText.classList.add('text-slate-800'); // Делаем текст темным после выбора
+        taskInput.value = value; // Сохраняем значение в скрытый input для отправки формы
+        
+        closeCustomSelect();
+      });
+    });
+
+    // Закрытие при клике вне меню
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('custom-select-container');
+      if (container && !container.contains(e.target)) {
+        closeCustomSelect();
+      }
     });
 
   </script>

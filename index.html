@@ -233,48 +233,6 @@
       </div>
     </section>
 
-    <!-- 4.5 ИИ ГЕНЕРАТОР СЦЕНАРИЕВ (Gemini Feature) -->
-    <section class="w-full py-16 flex flex-col items-center">
-      <div class="bg-white/30 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.03)] w-full max-w-4xl p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden">
-        <!-- Декоративный блеск -->
-        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-300/20 blur-[50px] rounded-full pointer-events-none"></div>
-        
-        <div class="flex flex-col items-center text-center relative z-10">
-          <i data-lucide="sparkles" style="stroke-width: 1px;" class="w-10 h-10 text-blue-500 mb-4"></i>
-          <h2 class="text-2xl md:text-3xl font-light mb-4 tracking-wide">Примерьте VOCTA на свой бизнес</h2>
-          <p class="text-slate-600 font-light mb-8 max-w-2xl">
-            Узнайте, как наш ИИ будет общаться именно с вашими клиентами. Введите сферу вашей деятельности, и нейросеть сгенерирует пример идеального диалога.
-          </p>
-          
-          <div class="flex flex-col md:flex-row gap-4 w-full max-w-2xl mb-8">
-            <input 
-              type="text" 
-              id="niche-input"
-              placeholder="Например: Автосервис, Стоматология, Недвижимость..." 
-              class="flex-grow bg-white/40 border border-white/60 focus:border-blue-400 rounded-full px-6 py-4 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors"
-            />
-            <button 
-              id="generate-btn"
-              class="px-8 py-4 rounded-full bg-blue-50/50 hover:bg-blue-100/50 backdrop-blur-xl border border-blue-200/50 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.04)] text-sm tracking-widest uppercase font-medium text-slate-700 flex justify-center items-center gap-2"
-            >
-              <i id="btn-loader" data-lucide="loader-2" class="w-5 h-5 animate-spin hidden"></i>
-              <span id="btn-text">✨ Сгенерировать</span>
-            </button>
-          </div>
-
-          <!-- Скрытый по умолчанию блок с результатом -->
-          <div id="result-wrapper" class="hidden w-full max-w-3xl text-left bg-white/40 border border-white/50 p-6 md:p-8 rounded-3xl backdrop-blur-sm shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-opacity duration-700">
-            <div class="text-xs uppercase tracking-widest text-blue-500 font-medium mb-4 flex items-center gap-2">
-              <i data-lucide="check-circle-2" class="w-4 h-4"></i> Сценарий готов
-            </div>
-            <div id="result-text" class="space-y-4 text-slate-700 font-light leading-relaxed whitespace-pre-wrap">
-              <!-- Сюда вставляется ответ от API -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 5. ANATOMY PUZZLE (Animated Digital Brain) -->
     <section id="section-2" class="w-full pt-8 pb-20 scroll-mt-16 flex flex-col items-center overflow-hidden">
       <h2 class="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide">Из чего состоит ваш новый сотрудник</h2>
@@ -632,77 +590,6 @@
       audioEl.currentTime = percent * audioEl.duration;
       audioProgress = percent * 100;
       updateWaveVisuals();
-    });
-
-    // 7. ИИ Генератор (Gemini API)
-    const apiKey = ""; // Ключ API предоставляется средой выполнения
-    const nicheInput = document.getElementById('niche-input');
-    const generateBtn = document.getElementById('generate-btn');
-    const btnText = document.getElementById('btn-text');
-    const btnLoader = document.getElementById('btn-loader');
-    const resultWrapper = document.getElementById('result-wrapper');
-    const resultText = document.getElementById('result-text');
-
-    async function callGeminiAPI(userText, systemText) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-      const payload = {
-        contents: [{ parts: [{ text: userText }] }],
-        systemInstruction: { parts: [{ text: systemText }] }
-      };
-
-      const delays = [1000, 2000, 4000, 8000, 16000];
-      for (let attempt = 0; attempt < 6; attempt++) {
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          const data = await response.json();
-          return data.candidates?.[0]?.content?.parts?.[0]?.text || "Извините, произошла ошибка при генерации ответа.";
-        } catch (error) {
-          if (attempt === 5) return "Ошибка подключения к ИИ. Пожалуйста, попробуйте позже.";
-          await new Promise(resolve => setTimeout(resolve, delays[attempt]));
-        }
-      }
-    }
-
-    async function handleGenerateScript() {
-      const niche = nicheInput.value.trim();
-      if (!niche) return;
-
-      // Loading state
-      generateBtn.disabled = true;
-      btnText.classList.add('hidden');
-      btnLoader.classList.remove('hidden');
-      resultWrapper.classList.add('hidden');
-      resultText.textContent = '';
-      
-      const prompt = `Напиши короткий, реалистичный пример диалога по телефону (на русском языке) между ИИ-ассистентом VOCTA и клиентом для бизнеса: ${niche}. 
-      Диалог должен показывать, как круто VOCTA квалифицирует лида, отвечает на вопросы без скрипта и закрывает сделку/записывает на прием. 
-      Формат: 
-      Клиент: [реплика]
-      VOCTA: [умный ответ ИИ]. 
-      Максимум 4-5 обменов репликами. Без лишних вступлений.`;
-      
-      const systemInstruction = "Ты эксперт по продажам и копирайтер, создающий продающие сценарии для ИИ ассистентов.";
-      
-      const response = await callGeminiAPI(prompt, systemInstruction);
-      
-      // Update UI with result
-      resultText.textContent = response;
-      resultWrapper.classList.remove('hidden');
-      
-      // Reset loading state
-      generateBtn.disabled = false;
-      btnText.classList.remove('hidden');
-      btnLoader.classList.add('hidden');
-    }
-
-    generateBtn.addEventListener('click', handleGenerateScript);
-    nicheInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleGenerateScript();
     });
 
   </script>

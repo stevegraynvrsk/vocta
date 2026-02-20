@@ -428,7 +428,7 @@
     </section>
 
     <!-- 7. BENEFITS -->
-    <section id="section-4" class="w-full pt-8 pb-20 scroll-mt-16 max-w-4xl mx-auto">
+    <section id="section-4" class="w-full pt-8 pb-20 scroll-mt-16 max-w-4xl mx-auto transition-opacity duration-500">
       <div class="bg-white/30 backdrop-blur-xl border border-white/70 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-10 md:p-16 rounded-[3rem]">
         <h2 class="text-3xl md:text-4xl font-light text-center mb-12 tracking-wide">Почему нейро-сотрудник вам нужен</h2>
         
@@ -514,7 +514,7 @@
       <!-- Form Container -->
       <div id="form-container" class="relative z-10">
         <h3 class="text-2xl font-medium text-slate-800 mb-2 tracking-wide">Нанять VOCTA</h3>
-        <p class="text-slate-600 font-light text-sm mb-6 leading-relaxed">Оставьте контакты, и мы свяжемся с вами в течение 15 минут, чтобы обсудить внедрение.</p>
+        <p class="text-slate-600 font-light text-sm mb-6 leading-relaxed">Оставьте контакты, и мы свяжемся с вами, чтобы обсудить внедрение.</p>
         
         <form id="lead-form" class="space-y-4">
           <div>
@@ -533,11 +533,11 @@
               <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-300" id="custom-select-icon"></i>
             </div>
             
-            <ul id="custom-select-dropdown" class="absolute z-50 w-full mt-2 bg-white/90 backdrop-blur-2xl border border-white/80 rounded-2xl shadow-xl overflow-hidden opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-300">
-              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="inbound">Входящие звонки</li>
-              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="outbound">Обзвон базы</li>
-              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors border-b border-white/60" data-value="consulting">Консультирование</li>
-              <li class="px-5 py-3 hover:bg-blue-50/80 cursor-pointer text-slate-700 font-light transition-colors" data-value="other">Не уверен, нужна консультация</li>
+            <ul id="custom-select-dropdown" class="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-300">
+              <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-100" data-value="leads">Увеличение ЛИДов</li>
+              <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-100" data-value="sales">Продажи</li>
+              <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-100" data-value="consulting">Консультирование</li>
+              <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors" data-value="other">Не уверен, нужна консультация</li>
             </ul>
           </div>
 
@@ -730,6 +730,7 @@
     const submitText = document.getElementById('submit-text');
     const submitLoader = document.getElementById('submit-loader');
     const mainCtaBtn = document.getElementById('main-cta-btn'); // Кнопка призыва
+    const benefitsSection = document.getElementById('section-4'); // Блок преимуществ
 
     function openModal() {
       modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -737,10 +738,9 @@
       modalContent.classList.add('scale-100');
       document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
       
-      // Прячем основную кнопку, чтобы она не просвечивала через форму
-      if (mainCtaBtn) {
-        mainCtaBtn.classList.add('opacity-0', 'pointer-events-none');
-      }
+      // Прячем основную кнопку и блок преимуществ, чтобы они не просвечивали через форму
+      if (mainCtaBtn) mainCtaBtn.classList.add('opacity-0', 'pointer-events-none');
+      if (benefitsSection) benefitsSection.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function closeModal() {
@@ -749,10 +749,9 @@
       modalContent.classList.add('scale-95');
       document.body.style.overflow = ''; // Возвращаем скролл
       
-      // Возвращаем основную кнопку на место
-      if (mainCtaBtn) {
-        mainCtaBtn.classList.remove('opacity-0', 'pointer-events-none');
-      }
+      // Возвращаем основную кнопку и блок преимуществ на место
+      if (mainCtaBtn) mainCtaBtn.classList.remove('opacity-0', 'pointer-events-none');
+      if (benefitsSection) benefitsSection.classList.remove('opacity-0', 'pointer-events-none');
       
       // Сброс формы через 500мс (когда анимация закрытия завершится)
       setTimeout(() => {

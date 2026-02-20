@@ -17,7 +17,7 @@
       scroll-behavior: smooth;
     }
     
-    /* Дополнительные стили для скрытия полосы прокрутки внутри чата/плеера, если понадобится */
+    /* Дополнительные стили для скрытия полосы прокрутки */
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -32,7 +32,7 @@
 </head>
 <body class="min-h-screen font-sans text-slate-800 font-light selection:bg-blue-100 selection:text-blue-900 bg-[#eef4f9] relative">
 
-  <!-- Main Hero Background (Coded visually to match your image exactly) -->
+  <!-- Main Hero Background -->
   <div class="absolute top-0 left-0 w-full h-[120vh] z-0 overflow-hidden pointer-events-none">
     <!-- Sky gradient -->
     <div class="absolute inset-0 bg-gradient-to-b from-[#b5d3f5] via-[#d6e8fa] to-[#eef4f9]"></div>
@@ -120,11 +120,10 @@
 
       <!-- AUDIO PLAYER COMPONENT -->
       <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] w-full max-w-4xl p-6 md:p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-6 md:gap-8 mx-auto relative overflow-hidden group">
-        <!-- Декоративный светящийся фон, реагирующий на воспроизведение -->
-        <div id="audio-bg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-blue-300/10 blur-[60px] rounded-full transition-opacity duration-700 opacity-0 pointer-events-none"></div>
+        <!-- ОПТИМИЗАЦИЯ: Радиальный градиент вместо blur -->
+        <div id="audio-bg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] transition-opacity duration-700 opacity-0 pointer-events-none" style="background: radial-gradient(circle, rgba(147, 197, 253, 0.2) 0%, transparent 60%);"></div>
 
         <!-- Скрытый тег аудио -->
-        <!-- ВНИМАНИЕ: Замените src на ссылку вашего реального аудиофайла звонка -->
         <audio id="demo-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
         <!-- Кнопка Play/Pause -->
@@ -135,9 +134,8 @@
 
         <!-- Центральная часть с визуализатором (на все пространство) -->
         <div class="flex-grow w-full flex items-center z-10 px-2 md:px-6">
-          <!-- Визуализатор звуковой волны (генерируется через JS) -->
           <div id="waveform-container" class="flex items-center justify-between w-full h-20 md:h-24 cursor-pointer group/wave">
-            <!-- Столбики будут добавлены сюда с помощью JS -->
+            <!-- Столбики генерируются через JS -->
           </div>
         </div>
       </div>
@@ -149,7 +147,7 @@
       
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         
-        <!-- Text side - REDESIGNED -->
+        <!-- Text side -->
         <div class="flex flex-col gap-6 w-full">
           <!-- Animated Element -->
           <div class="anim-target bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-6 md:p-8 rounded-[2rem] flex gap-5 items-start relative overflow-hidden group transition-all duration-1000 ease-out transform opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 100ms;">
@@ -191,9 +189,8 @@
           </div>
         </div>
 
-        <!-- Infographic side - AUTONOMOUS ANIMATIONS -->
+        <!-- Infographic side -->
         <div class="flex flex-col gap-8 w-full">
-          
           <!-- Human Bar -->
           <div class="flex flex-col gap-2">
             <span class="anim-target text-xs uppercase tracking-widest text-slate-500 ml-2 transition-all duration-700 ease-out opacity-0" data-hide="opacity-0" data-show="opacity-100" style="transition-delay: 100ms;">Живой оператор</span>
@@ -233,9 +230,9 @@
       </div>
 
       <!-- REAL CASE STUDY: ООО ИнЭко -->
-      <div class="anim-target mt-24 bg-gradient-to-br from-white/40 to-white/10 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] p-8 md:p-12 rounded-[3rem] relative overflow-hidden transition-all duration-1000 ease-out transform opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 200ms;">
-        <!-- Decorative glow -->
-        <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-teal-300/20 blur-[60px] rounded-full pointer-events-none"></div>
+      <div class="anim-target gpu-accel mt-24 bg-gradient-to-br from-white/40 to-white/10 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] p-8 md:p-12 rounded-[3rem] relative overflow-hidden transition-all duration-1000 ease-out opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 200ms;">
+        <!-- Оптимизированное свечение -->
+        <div class="absolute top-[-50px] right-[-50px] w-[300px] h-[300px] pointer-events-none" style="background: radial-gradient(circle, rgba(94,234,212,0.15) 0%, transparent 70%);"></div>
 
         <div class="flex flex-col md:flex-row gap-10 items-center relative z-10">
           
@@ -296,45 +293,45 @@
 
         <!-- Левая колонка компонентов -->
         <div class="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
-          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 100ms;">
+          <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 100ms;">
             <i data-lucide="activity" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
             <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Voice</h3>
             <p class="text-slate-600 font-light text-sm">Понимает речь клиента</p>
           </div>
 
-          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 300ms;">
+          <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-end md:text-right text-center gap-3 transition-all duration-1000 ease-out opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 300ms;">
             <i data-lucide="network" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
             <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA API</h3>
             <p class="text-slate-600 font-light text-sm">Отвечает за автоматизацию получения готовых ЛИДов</p>
           </div>
         </div>
 
-        <!-- Центральный мозг ИИ -->
-        <div class="anim-target order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out transform opacity-0 scale-75" data-hide="opacity-0 scale-75" data-show="opacity-100 scale-100" style="transition-delay: 500ms;">
-            <!-- Соединительные линии (видны на десктопе) -->
+        <!-- Центральный мозг ИИ (Оптимизированный) -->
+        <div class="anim-target gpu-accel order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out opacity-0 scale-75" data-hide="opacity-0 scale-75" data-show="opacity-100 scale-100" style="transition-delay: 500ms;">
+            <!-- Соединительные линии -->
             <div class="absolute top-1/2 left-[-30%] right-[-30%] h-[1px] bg-gradient-to-r from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
             <div class="absolute left-1/2 top-[-30%] bottom-[-30%] w-[1px] bg-gradient-to-b from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
 
-            <!-- Вращающиеся кольца ядра -->
-            <div class="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite]"></div>
-            <div class="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse]"></div>
+            <!-- Вращающиеся кольца -->
+            <div class="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite] transform-gpu"></div>
+            <div class="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse] transform-gpu"></div>
             
             <!-- Пульсирующая сердцевина -->
-            <div class="absolute inset-12 rounded-full bg-gradient-to-tr from-blue-300/30 to-white/40 backdrop-blur-md shadow-[0_0_80px_rgba(59,130,246,0.5)] animate-pulse"></div>
+            <div class="absolute inset-12 rounded-full bg-blue-300/10 shadow-[0_0_40px_rgba(59,130,246,0.3)] animate-pulse border border-white/20"></div>
             
             <!-- Иконка мозга -->
-            <i data-lucide="brain-circuit" style="stroke-width: 1px;" class="w-20 h-20 md:w-24 md:h-24 text-blue-500 relative z-10 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"></i>
+            <i data-lucide="brain-circuit" style="stroke-width: 1px;" class="w-20 h-20 md:w-24 md:h-24 text-blue-500 relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)]"></i>
         </div>
 
         <!-- Правая колонка компонентов -->
         <div class="flex flex-col gap-6 md:gap-16 w-full max-w-sm">
-          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 700ms;">
+          <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 700ms;">
             <i data-lucide="brain-circuit" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
             <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Think</h3>
             <p class="text-slate-600 font-light text-sm">Думает как лучше ответить клиенту</p>
           </div>
 
-          <div class="anim-target bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out transform opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 900ms;">
+          <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/40 p-8 rounded-[2rem] flex flex-col items-center md:items-start md:text-left text-center gap-3 transition-all duration-1000 ease-out opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-hide="opacity-0 md:-translate-x-12 translate-y-12 md:translate-y-0" data-show="opacity-100 translate-x-0 translate-y-0" style="transition-delay: 900ms;">
             <i data-lucide="shield-check" style="stroke-width: 1.5px;" class="w-10 h-10 text-blue-500"></i>
             <h3 class="text-xl font-medium tracking-widest uppercase text-slate-800">VOCTA Secure</h3>
             <p class="text-slate-600 font-light text-sm">Обеспечивает безопасность вашего бюджета</p>
@@ -345,83 +342,79 @@
     </section>
 
     <!-- 6. LAUNCH TIMELINE -->
-    <!-- Увеличили отступы mt-12 md:mt-24, чтобы визуально отдалить от блока анатомии -->
-    <section id="section-3" class="w-full mt-12 md:mt-24 pt-8 pb-20 scroll-mt-16">
-      <h2 class="text-3xl md:text-4xl font-light text-center mb-20 tracking-wide">Процесс запуска</h2>
+    <section id="section-3" class="w-full mt-12 md:mt-24 pt-16 pb-24 scroll-mt-16 relative overflow-hidden">
       
-      <div class="relative max-w-4xl mx-auto">
-        <!-- Central Line -->
-        <div class="absolute left-[28px] md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-200 via-blue-300 to-transparent transform md:-translate-x-1/2"></div>
+      <!-- Декоративные фоновые элементы (Ледяные волны в едином стиле сайта) -->
+      <div class="absolute inset-0 pointer-events-none -z-10 flex items-end opacity-60">
+        <svg viewBox="0 0 1440 400" class="w-full h-[60%] md:h-[120%] drop-shadow-[0_-10px_20px_rgba(255,255,255,0.2)]" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill="rgba(255, 255, 255, 0.4)" d="M0,150L60,160C120,170,240,190,360,195C480,200,600,190,720,165C840,140,960,100,1080,95C1200,90,1320,120,1380,135L1440,150L1440,400L1380,400C1320,400,1200,400,1080,400C960,400,840,400,720,400C600,400,480,400,360,400C240,400,120,400,60,400L0,400Z"></path>
+          <path fill="rgba(224, 238, 251, 0.6)" d="M0,220L80,210C160,200,320,180,480,185C640,190,800,220,960,235C1120,250,1280,250,1360,250L1440,250L1440,400L1360,400C1280,400,1120,400,960,400C800,400,640,400,480,400C320,400,160,400,80,400L0,400Z"></path>
+          <path fill="rgba(238, 244, 249, 0.8)" d="M0,300L120,280C240,260,480,220,720,215C960,210,1200,240,1320,255L1440,270L1440,400L1320,400C1200,400,960,400,720,400C480,400,240,400,120,400L0,400Z"></path>
+        </svg>
+      </div>
+
+      <h2 class="text-3xl md:text-4xl font-light text-center mb-16 tracking-wide relative z-10">Процесс запуска</h2>
+      
+      <!-- Компактная сетка этапов -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto relative z-10 px-6 md:px-0">
         
         <!-- Шаг 1 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 01</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Ваша задача</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Проведем встречу, где обсудим задачу, которую должен выполнять ваш нейро-сотрудник.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 100ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">1</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="target" class="w-4 h-4"></i>Этап 01</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Ваша задача</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">Проведем встречу, где обсудим задачу, которую должен выполнять ваш нейро-сотрудник.</p>
           </div>
         </div>
 
         <!-- Шаг 2 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 02</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Решение задачи</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Используя опыт более 14-ти лет продаж в банковской сфере, предложим вариант диалога для вашего нейро-сотрудника для решения бизнес задачи.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 200ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">2</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4"></i>Этап 02</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Решение задачи</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">Используя опыт более 14-ти лет продаж в банковской сфере, предложим вариант диалога для вашего нейро-сотрудника для решения бизнес задачи.</p>
           </div>
         </div>
 
         <!-- Шаг 3 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 03</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Обучение</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Обучим нейро-сотрудника общаться с клиентом, для решения бизнес задачи: отвечать на вопросы, предлагать товар или услугу, отрабатывать возражения, собирать данные клиентов и передавать их Вам.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 300ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">3</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="graduation-cap" class="w-4 h-4"></i>Этап 03</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Обучение</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">Обучим нейро-сотрудника общаться с клиентом, для решения бизнес задачи: отвечать на вопросы, предлагать товар или услугу, отрабатывать возражения, собирать данные клиентов и передавать их Вам.</p>
           </div>
         </div>
 
         <!-- Шаг 4 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 04</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Тестирование</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Проведем тестирование в «полевых условиях», чтобы ваш сотрудник эффективно выполнял свою задачу.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 400ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">4</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4"></i>Этап 04</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Тестирование</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">Проведем тестирование в «полевых условиях», чтобы ваш сотрудник эффективно выполнял свою задачу.</p>
           </div>
         </div>
 
         <!-- Шаг 5 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pr-16 text-left md:text-right">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 05</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Запуск</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">После успешного прохождения тестирования, мы запускаем вашего нейро-сотрудника и настраиваем автоматизированную инфраструктуру, чтобы вы получали готовых к продаже клиентов.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 500ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">5</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="rocket" class="w-4 h-4"></i>Этап 05</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Запуск</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">После успешного прохождения тестирования, мы запускаем вашего нейро-сотрудника и настраиваем автоматизированную инфраструктуру, чтобы вы получали готовых к продаже клиентов.</p>
           </div>
         </div>
 
         <!-- Шаг 6 -->
-        <div class="relative flex items-start mb-12 last:mb-0 md:flex-row-reverse">
-          <div class="absolute left-[28px] md:left-1/2 transform -translate-x-1/2 w-4 h-4 rounded-full bg-white border-2 border-blue-300 shadow-[0_0_10px_rgba(147,197,253,0.8)] z-10 mt-6"></div>
-          <div class="ml-16 md:ml-0 w-full md:w-1/2 md:pl-16 text-left">
-            <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] inline-block w-full hover:scale-[1.02] transition-transform duration-300">
-              <div class="text-sm font-medium tracking-widest text-blue-400 mb-2 uppercase">Этап 06</div>
-              <h3 class="text-xl font-medium tracking-wide mb-3">Развитие</h3>
-              <p class="text-slate-600 font-light leading-relaxed text-sm md:text-base">Будем следить, чтобы ваш сотрудник непрерывно развивался, повышая свою эффективность.</p>
-            </div>
+        <div class="anim-target gpu-accel bg-white/30 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] p-8 rounded-[2rem] hover:-translate-y-2 hover:bg-white/50 hover:shadow-[0_15px_40px_rgba(147,197,253,0.25)] transition-all duration-500 relative overflow-hidden group opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 600ms;">
+          <div class="absolute -right-6 -top-10 text-[10rem] font-bold text-white/60 group-hover:text-blue-100/50 transition-colors duration-500 pointer-events-none select-none">6</div>
+          <div class="relative z-10">
+            <div class="text-xs font-medium tracking-widest text-blue-500 mb-3 uppercase flex items-center gap-2"><i data-lucide="line-chart" class="w-4 h-4"></i>Этап 06</div>
+            <h3 class="text-xl font-medium tracking-wide mb-3 text-slate-800">Развитие</h3>
+            <p class="text-slate-600 font-light leading-relaxed text-sm">Будем следить, чтобы ваш сотрудник непрерывно развивался, повышая свою эффективность.</p>
           </div>
         </div>
 
@@ -560,6 +553,10 @@
     const section2 = document.getElementById('section-2');
     if(section1) animObserver.observe(section1);
     if(section2) animObserver.observe(section2);
+
+    // Добавлено наблюдение за section-3, чтобы новые карточки "Процесс запуска" выезжали при прокрутке
+    const section3 = document.getElementById('section-3');
+    if(section3) animObserver.observe(section3);
 
     // 6. Аудиоплеер и живая волна эквалайзера
     const audioEl = document.getElementById('demo-audio');

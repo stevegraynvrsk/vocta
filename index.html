@@ -58,7 +58,7 @@
 
   <!-- HEADER -->
   <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6 bg-transparent">
-    <div class="max-w-7xl mx-auto px-6 flex justify-center items-center">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between md:justify-center items-center relative">
       <nav class="hidden md:flex items-center gap-10 text-sm tracking-wider text-slate-600">
         <button onclick="scrollToSection('section-0')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Что делает</button>
         <button onclick="scrollToSection('section-1')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Как это работает</button>
@@ -66,8 +66,17 @@
         <button onclick="scrollToSection('section-3')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Запуск</button>
         <button onclick="scrollToSection('section-4')" class="hover:text-blue-500 transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-[1px] after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300">Преимущества</button>
       </nav>
-      <!-- Mobile menu hint -->
+      
+      <!-- Mobile menu hint / Logo -->
       <div class="md:hidden text-sm tracking-widest uppercase font-medium">VOCTA</div>
+
+      <!-- Кнопка в шапке (Живая анимированная) -->
+      <div class="hidden md:flex absolute right-6 items-center">
+        <button onclick="openModal()" class="cta-btn group flex items-center justify-start h-11 bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_4px_25px_rgba(59,130,246,0.5)] transition-all duration-500 ease-out overflow-hidden w-11 hover:w-[190px]">
+          <span class="flex-shrink-0 w-11 h-11 flex items-center justify-center font-semibold text-lg">V</span>
+          <span class="whitespace-nowrap text-[11px] tracking-widest uppercase font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 pt-[1px]">Нанять VOCTA</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -81,6 +90,7 @@
       <p class="text-xl md:text-2xl font-light tracking-wide text-slate-800 max-w-2xl drop-shadow-sm">
         лучший сотрудник для твоего бизнеса
       </p>
+
       <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-60">
         <div class="w-[1px] h-20 bg-gradient-to-b from-transparent via-slate-500 to-transparent mx-auto"></div>
       </div>
@@ -144,6 +154,14 @@
             <!-- Столбики генерируются через JS -->
           </div>
         </div>
+      </div>
+      
+      <!-- Кнопка под аудиоплеером (Новая) -->
+      <div class="mt-12 z-10 relative">
+        <button onclick="openModal()" class="cta-btn px-8 py-4 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-blue-200/50 hover:bg-white/60 hover:border-blue-300 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] text-sm tracking-widest uppercase font-medium text-slate-700 hover:text-blue-600 flex items-center gap-2 hover:-translate-y-1">
+          Внедрить в свой бизнес
+          <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+        </button>
       </div>
     </section>
 
@@ -467,12 +485,11 @@
       </div>
     </section>
 
-    <!-- 8. CALL TO ACTION -->
+    <!-- 8. CALL TO ACTION (Bottom) -->
     <section class="w-full py-20 flex justify-center text-center relative z-10">
       <button 
-        id="main-cta-btn"
         onclick="openModal()"
-        class="px-10 py-5 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/80 hover:bg-white/60 transition-all duration-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] text-base md:text-lg tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 scale-100 hover:scale-105"
+        class="cta-btn px-10 py-5 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/80 hover:bg-white/60 transition-all duration-500 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] text-base md:text-lg tracking-widest uppercase font-medium text-slate-700 hover:text-slate-900 flex items-center gap-2 scale-100 hover:scale-105"
       >
         Нанять своего лучшего сотрудника
       </button>
@@ -730,8 +747,8 @@
     const submitText = document.getElementById('submit-text');
     const submitLoader = document.getElementById('submit-loader');
     
-    // Элементы, которые нужно скрыть при открытии формы
-    const mainCtaBtn = document.getElementById('main-cta-btn'); 
+    // Элементы, которые нужно скрыть при открытии формы (все кнопки + блок преимуществ)
+    const ctaButtons = document.querySelectorAll('.cta-btn'); 
     const benefitsSection = document.getElementById('section-4'); 
 
     function openModal() {
@@ -740,8 +757,8 @@
       modalContent.classList.add('scale-100');
       document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
       
-      // Прячем основную кнопку и блок преимуществ, чтобы они не просвечивали
-      if (mainCtaBtn) mainCtaBtn.classList.add('opacity-0', 'pointer-events-none');
+      // Прячем все кнопки CTA и блок преимуществ, чтобы они не просвечивали
+      ctaButtons.forEach(btn => btn.classList.add('opacity-0', 'pointer-events-none'));
       if (benefitsSection) benefitsSection.classList.add('opacity-0', 'pointer-events-none');
     }
 
@@ -751,8 +768,8 @@
       modalContent.classList.add('scale-95');
       document.body.style.overflow = ''; // Возвращаем скролл
       
-      // Возвращаем основную кнопку и блок преимуществ на место
-      if (mainCtaBtn) mainCtaBtn.classList.remove('opacity-0', 'pointer-events-none');
+      // Возвращаем все кнопки и блок преимуществ на место
+      ctaButtons.forEach(btn => btn.classList.remove('opacity-0', 'pointer-events-none'));
       if (benefitsSection) benefitsSection.classList.remove('opacity-0', 'pointer-events-none');
       
       // Сброс формы через 500мс
@@ -791,17 +808,19 @@
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbwDcDaQLA8fBEkzpoWiUoxFcz8At7TZdNoXS7UCvJArTXlhGlv3FPZt7WgIHUnwU0um/exec';
 
       try {
+        const formData = new URLSearchParams();
+        formData.append('name', name);
+        formData.append('phone', phone);
+        formData.append('task', taskText);
+        
+        // Формируем красивое сообщение для скрипта
+        const message = `🔥 Новая заявка с сайта VOCTA!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🎯 Задача: ${taskText}`;
+        formData.append('text', message); 
+
         await fetch(scriptUrl, {
           method: 'POST',
-          mode: 'no-cors', // Жестко говорим браузеру не блокировать запрос
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8' // Маскируем под простой текст
-          },
-          body: JSON.stringify({
-            name: name,
-            phone: phone,
-            task: taskText
-          })
+          mode: 'no-cors', 
+          body: formData 
         });
 
         // Запрос улетел, показываем галочку успеха
@@ -810,7 +829,6 @@
         successContainer.classList.add('flex');
         
       } catch (error) {
-        // На случай реальной ошибки сети (например, пропал интернет)
         console.error('Ошибка отправки:', error);
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');

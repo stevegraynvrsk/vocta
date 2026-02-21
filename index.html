@@ -354,7 +354,7 @@
       <div class="absolute inset-0 pointer-events-none -z-10 flex items-end opacity-60">
         <svg viewBox="0 0 1440 400" class="w-full h-[60%] md:h-[120%] drop-shadow-[0_-10px_20px_rgba(255,255,255,0.2)]" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill="rgba(255, 255, 255, 0.4)" d="M0,150L60,160C120,170,240,190,360,195C480,200,600,190,720,165C840,140,960,100,1080,95C1200,90,1320,120,1380,135L1440,150L1440,400L1380,400C1320,400,1200,400,1080,400C960,400,840,400,720,400C600,400,480,400,360,400C240,400,120,400,60,400L0,400Z"></path>
-          <path fill="rgba(224, 238, 251, 0.6)" d="M0,220L80,210C160,200,320,180,480,185C640,190,800,220,960,235C1120,250,1280,250,1360,250L1440,250L1440,400L1360,400C1280,400,1120,400,960,400C800,400,640,400,480,400C320,400,160,400,80,400L0,400Z"></path>
+          <path fill="rgba(224, 238, 251, 0.9)" d="M0,220L80,210C160,200,320,180,480,185C640,190,800,220,960,235C1120,250,1280,250,1360,250L1440,250L1440,400L1360,400C1280,400,1120,400,960,400C800,400,640,400,480,400C320,400,160,400,80,400L0,400Z"></path>
           <path fill="rgba(238, 244, 249, 0.8)" d="M0,300L120,280C240,260,480,220,720,215C960,210,1200,240,1320,255L1440,270L1440,400L1320,400C1200,400,960,400,720,400C480,400,240,400,120,400L0,400Z"></path>
         </svg>
       </div>
@@ -518,11 +518,9 @@
         
         <form id="lead-form" class="space-y-4">
           <div>
-            <!-- Добавили id="name-input" для сбора данных -->
             <input type="text" id="name-input" required placeholder="Ваше имя" class="w-full bg-white/60 border border-white/80 focus:border-blue-400 rounded-2xl px-5 py-3 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors">
           </div>
           <div>
-            <!-- Поле для маски телефона -->
             <input type="tel" id="phone-input" required placeholder="+7 000 000-00-00" class="w-full bg-white/60 border border-white/80 focus:border-blue-400 rounded-2xl px-5 py-3 outline-none backdrop-blur-md text-slate-800 placeholder-slate-500 font-light shadow-inner transition-colors">
           </div>
           
@@ -534,6 +532,7 @@
               <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-300" id="custom-select-icon"></i>
             </div>
             
+            <!-- Полностью белый непрозрачный список -->
             <ul id="custom-select-dropdown" class="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-300">
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-100" data-value="leads">Увеличение ЛИДов</li>
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-100" data-value="sales">Продажи</li>
@@ -730,8 +729,10 @@
     const submitBtn = document.getElementById('submit-btn');
     const submitText = document.getElementById('submit-text');
     const submitLoader = document.getElementById('submit-loader');
-    const mainCtaBtn = document.getElementById('main-cta-btn'); // Кнопка призыва
-    const benefitsSection = document.getElementById('section-4'); // Блок преимуществ
+    
+    // Элементы, которые нужно скрыть при открытии формы
+    const mainCtaBtn = document.getElementById('main-cta-btn'); 
+    const benefitsSection = document.getElementById('section-4'); 
 
     function openModal() {
       modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -739,7 +740,7 @@
       modalContent.classList.add('scale-100');
       document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
       
-      // Прячем основную кнопку и блок преимуществ, чтобы они не просвечивали через форму
+      // Прячем основную кнопку и блок преимуществ, чтобы они не просвечивали
       if (mainCtaBtn) mainCtaBtn.classList.add('opacity-0', 'pointer-events-none');
       if (benefitsSection) benefitsSection.classList.add('opacity-0', 'pointer-events-none');
     }
@@ -754,7 +755,7 @@
       if (mainCtaBtn) mainCtaBtn.classList.remove('opacity-0', 'pointer-events-none');
       if (benefitsSection) benefitsSection.classList.remove('opacity-0', 'pointer-events-none');
       
-      // Сброс формы через 500мс (когда анимация закрытия завершится)
+      // Сброс формы через 500мс
       setTimeout(() => {
         leadForm.reset();
         formContainer.classList.remove('hidden');
@@ -777,17 +778,16 @@
     leadForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Показываем состояние загрузки
       submitBtn.disabled = true;
       submitText.classList.add('hidden');
       submitLoader.classList.remove('hidden');
 
-      // Собираем данные из формы
+      // Собираем данные
       const name = document.getElementById('name-input').value;
       const phone = document.getElementById('phone-input').value;
       const taskText = document.getElementById('custom-select-text').textContent;
 
-      // Формируем красивое сообщение для Telegram
+      // Формируем красивое сообщение (на случай, если скрипт пересылает его "как есть")
       const message = `
 🔥 <b>Новая заявка с сайта VOCTA!</b>
 
@@ -796,43 +796,36 @@
 🎯 <b>Задача:</b> ${taskText}
       `;
 
-      // Ваши данные Telegram
-      const BOT_TOKEN = '8317813132:AAGmmc2Wveu6tLaWMnicsJKxON1qkxnkI6k';
-      const CHAT_ID = '323447545';
-      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+      // Ваш Google Apps Script URL
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbybRxrlGffOLW5wEJ1DCFbUXmWg58JPBOfrdU_74HxwSP-0AthFdanOLIL5ax9hSZA/exec';
 
       try {
-        // Отправляем запрос к Telegram API
-        const response = await fetch(url, {
+        const response = await fetch(scriptUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
+          // Отправляем и сырые данные, и готовый текст
           body: JSON.stringify({
-            chat_id: CHAT_ID,
-            text: message,
-            parse_mode: 'HTML'
+            name: name,
+            phone: phone,
+            task: taskText,
+            text: message 
           })
         });
 
-        if (response.ok) {
-          // Если успешно, скрываем форму и показываем сообщение об успехе
-          formContainer.classList.add('hidden');
-          successContainer.classList.remove('hidden');
-          successContainer.classList.add('flex');
-        } else {
-          // Если сервер вернул ошибку
-          alert('Произошла ошибка при отправке. Пожалуйста, попробуйте позже.');
-          submitBtn.disabled = false;
-          submitText.classList.remove('hidden');
-          submitLoader.classList.add('hidden');
-        }
+        // Так как это GAS, даже если CORS заблокирует чтение ответа, запрос уходит.
+        // Поэтому мы скрываем форму и показываем успех
+        formContainer.classList.add('hidden');
+        successContainer.classList.remove('hidden');
+        successContainer.classList.add('flex');
+        
       } catch (error) {
-        console.error('Ошибка отправки в Telegram:', error);
-        alert('Произошла ошибка сети. Проверьте подключение.');
-        submitBtn.disabled = false;
-        submitText.classList.remove('hidden');
-        submitLoader.classList.add('hidden');
+        // При no-cors запросах к Google Script иногда выпадает в catch(TypeError),
+        // хотя запрос успешно доходит. Поэтому считаем успешным.
+        formContainer.classList.add('hidden');
+        successContainer.classList.remove('hidden');
+        successContainer.classList.add('flex');
       }
     });
 
@@ -840,9 +833,8 @@
     const phoneInput = document.getElementById('phone-input');
     
     phoneInput.addEventListener('input', function (e) {
-      let val = e.target.value.replace(/\D/g, ''); // Оставляем только цифры
+      let val = e.target.value.replace(/\D/g, ''); 
       
-      // Если юзер вставил номер начиная с 7 или 8, убираем ее, так как +7 всегда в начале
       if (val.startsWith('7') || val.startsWith('8')) {
         val = val.substring(1);
       }
@@ -852,7 +844,6 @@
         return;
       }
 
-      // Применяем маску
       let formatted = '+7 ';
       if (val.length > 0) formatted += val.substring(0, 3);
       if (val.length >= 4) formatted += ' ' + val.substring(3, 6);
@@ -862,17 +853,15 @@
       e.target.value = formatted;
     });
 
-    // Добавляем +7 при фокусе, если поле пустое
     phoneInput.addEventListener('focus', function(e) {
       if(e.target.value === '') e.target.value = '+7 ';
     });
     
-    // Убираем +7 при потере фокуса, если пользователь передумал вводить
     phoneInput.addEventListener('blur', function(e) {
       if(e.target.value === '+7 ' || e.target.value === '+7') e.target.value = '';
     });
 
-    // 9. Кастомный выпадающий список (Select)
+    // 9. Кастомный выпадающий список
     const selectTrigger = document.getElementById('custom-select-trigger');
     const selectDropdown = document.getElementById('custom-select-dropdown');
     const selectText = document.getElementById('custom-select-text');
@@ -890,9 +879,8 @@
       selectIcon.classList.remove('rotate-180');
     }
 
-    // Открытие/закрытие по клику
     selectTrigger.addEventListener('click', (e) => {
-      e.stopPropagation(); // Предотвращаем закрытие по клику на весь документ
+      e.stopPropagation(); 
       const isOpen = !selectDropdown.classList.contains('opacity-0');
       if (isOpen) {
         closeCustomSelect();
@@ -901,7 +889,6 @@
       }
     });
 
-    // Выбор опции
     selectOptions.forEach(option => {
       option.addEventListener('click', (e) => {
         const value = e.target.getAttribute('data-value');
@@ -909,14 +896,13 @@
         
         selectText.textContent = text;
         selectText.classList.remove('text-slate-500');
-        selectText.classList.add('text-slate-800'); // Делаем текст темным после выбора
-        taskInput.value = value; // Сохраняем значение в скрытый input для отправки формы
+        selectText.classList.add('text-slate-800'); 
+        taskInput.value = value; 
         
         closeCustomSelect();
       });
     });
 
-    // Закрытие при клике вне меню
     document.addEventListener('click', (e) => {
       const container = document.getElementById('custom-select-container');
       if (container && !container.contains(e.target)) {

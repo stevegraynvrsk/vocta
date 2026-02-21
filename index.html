@@ -43,8 +43,8 @@
     <!-- Sky gradient -->
     <div class="absolute inset-0 bg-gradient-to-b from-[#b5d3f5] via-[#d6e8fa] to-[#eef4f9]"></div>
 
-    <!-- Glowing Ring -->
-    <div class="absolute top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full border-[3px] md:border-[4px] border-white shadow-[0_0_60px_rgba(255,255,255,0.8),inset_0_0_60px_rgba(255,255,255,0.8)] opacity-90 blur-[0.5px]"></div>
+    <!-- Glowing Ring (Оптимизирована тень) -->
+    <div class="absolute top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full border-[3px] md:border-[4px] border-white shadow-[0_0_30px_rgba(255,255,255,0.6),inset_0_0_30px_rgba(255,255,255,0.6)] opacity-90"></div>
 
     <!-- Ice Dunes (SVG Waves) -->
     <div class="absolute bottom-0 left-0 w-full h-[45vh]">
@@ -100,7 +100,8 @@
           лучший сотрудник для твоего бизнеса
         </p>
 
-        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-60">
+        <!-- Добавлен класс auto-pause -->
+        <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-60 auto-pause">
           <div class="w-[1px] h-20 bg-gradient-to-b from-transparent via-slate-500 to-transparent mx-auto"></div>
         </div>
       </section>
@@ -334,18 +335,18 @@
             </div>
           </div>
 
-          <!-- Центральный мозг ИИ -->
+          <!-- Центральный мозг ИИ (Добавлен класс auto-pause и оптимизирована тень) -->
           <div class="anim-target gpu-accel order-first md:order-none relative flex items-center justify-center w-48 h-48 md:w-64 md:h-64 transition-all duration-1000 ease-out opacity-0 scale-75" data-hide="opacity-0 scale-75" data-show="opacity-100 scale-100" style="transition-delay: 500ms;">
               <!-- Соединительные линии -->
               <div class="absolute top-1/2 left-[-30%] right-[-30%] h-[1px] bg-gradient-to-r from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
               <div class="absolute left-1/2 top-[-30%] bottom-[-30%] w-[1px] bg-gradient-to-b from-transparent via-blue-300/60 to-transparent hidden md:block -z-10"></div>
 
               <!-- Вращающиеся кольца -->
-              <div class="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite] transform-gpu"></div>
-              <div class="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse] transform-gpu"></div>
+              <div class="absolute inset-4 rounded-full border border-blue-400/30 border-dashed animate-[spin_20s_linear_infinite] transform-gpu auto-pause"></div>
+              <div class="absolute inset-8 rounded-full border border-blue-300/40 animate-[spin_15s_linear_infinite_reverse] transform-gpu auto-pause"></div>
               
               <!-- Пульсирующая сердцевина -->
-              <div class="absolute inset-12 rounded-full bg-blue-300/10 shadow-[0_0_40px_rgba(59,130,246,0.3)] animate-pulse border border-white/20"></div>
+              <div class="absolute inset-12 rounded-full bg-blue-300/10 shadow-[0_0_20px_rgba(59,130,246,0.4)] animate-pulse border border-white/20 auto-pause transform-gpu"></div>
               
               <!-- Иконка мозга -->
               <i data-lucide="brain-circuit" style="stroke-width: 1px;" class="w-20 h-20 md:w-24 md:h-24 text-blue-500 relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)]"></i>
@@ -514,8 +515,8 @@
             <i data-lucide="x" class="w-6 h-6 md:w-7 md:h-7"></i>
           </button>
 
-          <!-- Свечение -->
-          <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-blue-300/20 blur-[60px] rounded-full pointer-events-none"></div>
+          <!-- ОПТИМИЗАЦИЯ: Свечение заменено на радиальный градиент без blur -->
+          <div class="absolute top-0 right-0 -mt-20 -mr-20 w-[400px] h-[400px] rounded-full pointer-events-none transform-gpu" style="background: radial-gradient(circle, rgba(147,197,253,0.2) 0%, transparent 60%);"></div>
           
           <!-- Заголовок тарифа -->
           <div class="bg-gradient-to-r from-blue-500/10 to-teal-500/10 p-8 md:p-12 text-center border-b border-white/40 pt-12 md:pt-12">
@@ -588,7 +589,8 @@
       <!-- БЛОК 2: РЕФЕРАЛЬНАЯ ПРОГРАММА -->
       <section class="w-full mt-24 mb-20 flex justify-center">
         <div class="w-full max-w-4xl bg-gradient-to-br from-teal-400/10 via-emerald-300/10 to-transparent backdrop-blur-xl border border-teal-200/50 shadow-[0_8px_32px_rgba(20,184,166,0.1)] rounded-[3rem] p-10 md:p-16 relative overflow-hidden text-center">
-          <div class="absolute -top-24 -left-24 w-64 h-64 bg-teal-400/20 blur-[80px] rounded-full pointer-events-none"></div>
+          <!-- ОПТИМИЗАЦИЯ: Свечение заменено на радиальный градиент без blur -->
+          <div class="absolute -top-24 -left-24 w-[500px] h-[500px] rounded-full pointer-events-none transform-gpu" style="background: radial-gradient(circle, rgba(45,212,191,0.15) 0%, transparent 60%);"></div>
           
           <i data-lucide="handshake" style="stroke-width: 1.5px;" class="w-16 h-16 text-teal-600 mx-auto mb-6 relative z-10"></i>
           <h2 class="text-3xl md:text-4xl font-light text-slate-800 mb-6 tracking-wide relative z-10">Партнерская программа VOCTA</h2>
@@ -634,9 +636,9 @@
     
     <!-- Modal Content: Эффект матовой поверхности (Soft-touch) -->
     <div id="modal-content" class="bg-gradient-to-br from-white to-slate-50 border border-slate-100 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,1)] rounded-[2.5rem] w-[90%] max-w-md p-8 relative transform scale-95 transition-transform duration-500 z-10 overflow-visible gpu-accel">
-      <!-- Glow effects (остаются под карточкой для легкого свечения, добавлен transform-gpu для оптимизации перерисовки) -->
-      <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-blue-400/20 blur-[50px] rounded-full pointer-events-none -z-10 transform-gpu"></div>
-      <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-teal-400/20 blur-[50px] rounded-full pointer-events-none -z-10 transform-gpu"></div>
+      <!-- ОПТИМИЗАЦИЯ: Свечение заменено на радиальный градиент без blur -->
+      <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 rounded-full pointer-events-none -z-10 transform-gpu" style="background: radial-gradient(circle, rgba(96,165,250,0.2) 0%, transparent 60%);"></div>
+      <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 rounded-full pointer-events-none -z-10 transform-gpu" style="background: radial-gradient(circle, rgba(45,212,191,0.2) 0%, transparent 60%);"></div>
 
       <!-- Close Btn -->
       <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 transition-colors z-20">
@@ -669,7 +671,6 @@
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-50" data-value="leads">Увеличение ЛИДов</li>
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-50" data-value="sales">Продажи</li>
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-50" data-value="consulting">Консультирование</li>
-              <!-- НОВЫЙ ПУНКТ: Партнерство -->
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors border-b border-slate-50" data-value="partner">Хочу стать партнером</li>
               <li class="px-5 py-3 hover:bg-blue-50 cursor-pointer text-slate-700 font-light transition-colors" data-value="other">Не знаю, нужна консультация</li>
             </ul>
@@ -1041,6 +1042,24 @@
     document.addEventListener('click', (e) => {
       const container = document.getElementById('custom-select-container');
       if (container && !container.contains(e.target)) closeCustomSelect();
+    });
+
+    // ОПТИМИЗАЦИЯ: Умная пауза для анимаций, которые не видны на экране
+    // Это радикально снижает нагрузку на процессор и видеокарту в Safari и других браузерах
+    const continuousObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        } else {
+          entry.target.style.animationPlayState = 'paused';
+        }
+      });
+    }, { threshold: 0 });
+
+    document.querySelectorAll('.auto-pause').forEach(el => {
+      // Изначально ставим на паузу. Обсервер мгновенно запустит их, если они на экране.
+      el.style.animationPlayState = 'paused';
+      continuousObserver.observe(el);
     });
 
   </script>

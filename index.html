@@ -772,21 +772,23 @@
       const taskText = document.getElementById('custom-select-text').textContent;
 
       // Ваш НОВЫЙ Google Apps Script URL
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxryHOR4kbiPzAoGGmZXErd_9_BExuvA3tGi1gz6_AOJ0sRnhAcMLt2Fiskifqx-uI/exec';
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyTXGAvpv0KBcM3LiYjVI_FN3Fk6Dj3yWOKgoHkq-jMI4ayMy5jI3kWBELUyvewk91q/exec';
 
       // Формируем красивое сообщение для скрипта
       const message = `🔥 Новая заявка с сайта VOCTA!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🎯 Задача: ${taskText}`;
+
+      // Используем URLSearchParams для 100% совместимости с Google Apps Script
+      const params = new URLSearchParams();
+      params.append('text', message);
+      params.append('name', name);
+      params.append('phone', phone);
+      params.append('task', taskText);
 
       try {
         await fetch(scriptUrl, {
           method: 'POST',
           mode: 'no-cors', 
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8' 
-          },
-          body: JSON.stringify({
-            text: message
-          })
+          body: params 
         });
 
         formContainer.classList.add('hidden');

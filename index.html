@@ -771,26 +771,26 @@
       const phone = document.getElementById('phone-input').value;
       const taskText = document.getElementById('custom-select-text').textContent;
 
-      // Ваш НОВЫЙ Google Apps Script URL
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyTXGAvpv0KBcM3LiYjVI_FN3Fk6Dj3yWOKgoHkq-jMI4ayMy5jI3kWBELUyvewk91q/exec';
+      // Ваш Google Apps Script URL
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxKxg_AtCmUOF76by8gQsACSt0bRmGzznW_D8CvphdbUrQoOr3rE4umD-W2cpSRAi2K/exec';
 
-      // Формируем красивое сообщение для скрипта
-      const message = `🔥 Новая заявка с сайта VOCTA!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🎯 Задача: ${taskText}`;
-
-      // Используем URLSearchParams для 100% совместимости с Google Apps Script
-      const params = new URLSearchParams();
-      params.append('text', message);
-      params.append('name', name);
-      params.append('phone', phone);
-      params.append('task', taskText);
+      // 100% рабочий метод: передаем данные через параметры URL (GET-запрос)
+      const params = new URLSearchParams({
+        name: name,
+        phone: phone,
+        task: taskText
+      });
+      
+      const fullUrl = `${scriptUrl}?${params.toString()}`;
 
       try {
-        await fetch(scriptUrl, {
-          method: 'POST',
-          mode: 'no-cors', 
-          body: params 
+        // Отправляем GET-запрос в режиме no-cors
+        await fetch(fullUrl, {
+          method: 'GET',
+          mode: 'no-cors' 
         });
 
+        // Запрос улетел, показываем галочку успеха
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
         successContainer.classList.add('flex');
@@ -803,7 +803,7 @@
       }
     });
 
-    // Phone mask
+    // 8. Маска телефона (+7 000 000-00-00)
     const phoneInput = document.getElementById('phone-input');
     phoneInput.addEventListener('input', function (e) {
       let val = e.target.value.replace(/\D/g, ''); 

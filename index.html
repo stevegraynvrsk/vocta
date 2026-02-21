@@ -787,30 +787,30 @@
       const phone = document.getElementById('phone-input').value;
       const taskText = document.getElementById('custom-select-text').textContent;
 
-      // Формируем красивое сообщение (на случай, если скрипт пересылает его "как есть")
+      // Формируем красивое сообщение (опционально, если нужно передать сразу текст)
       const message = `
-🔥 <b>Новая заявка с сайта VOCTA!</b>
+🔥 Новая заявка с сайта VOCTA!
 
-👤 <b>Имя:</b> ${name}
-📞 <b>Телефон:</b> ${phone}
-🎯 <b>Задача:</b> ${taskText}
+👤 Имя: ${name}
+📞 Телефон: ${phone}
+🎯 Задача: ${taskText}
       `;
 
       // Ваш Google Apps Script URL
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbybRxrlGffOLW5wEJ1DCFbUXmWg58JPBOfrdU_74HxwSP-0AthFdanOLIL5ax9hSZA/exec';
 
       try {
+        // Используем URLSearchParams для 100% совместимости Google Apps Script c no-cors
+        const formData = new URLSearchParams();
+        formData.append('name', name);
+        formData.append('phone', phone);
+        formData.append('task', taskText);
+        formData.append('text', message); // Передаем и готовый текст на всякий случай
+
         await fetch(scriptUrl, {
           method: 'POST',
           mode: 'no-cors', // Жестко говорим браузеру не блокировать запрос
-          headers: {
-            'Content-Type': 'text/plain;charset=utf-8' // Маскируем под простой текст
-          },
-          body: JSON.stringify({
-            name: name,
-            phone: phone,
-            task: taskText
-          })
+          body: formData // Браузер сам поставит нужный заголовок form-urlencoded
         });
 
         // Запрос улетел, показываем галочку успеха
@@ -823,7 +823,7 @@
         console.error('Ошибка отправки:', error);
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
-        successContainer.classList.add('flex'); // Все равно показываем успех, так как no-cors скрывает реальный статус ответа
+        successContainer.classList.add('flex'); 
       }
     });
 

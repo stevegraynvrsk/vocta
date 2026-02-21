@@ -772,25 +772,23 @@
       const taskText = document.getElementById('custom-select-text').textContent;
 
       // Ваш Google Apps Script URL
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxKxg_AtCmUOF76by8gQsACSt0bRmGzznW_D8CvphdbUrQoOr3rE4umD-W2cpSRAi2K/exec';
-
-      // 100% рабочий метод: передаем данные через параметры URL (GET-запрос)
-      const params = new URLSearchParams({
-        name: name,
-        phone: phone,
-        task: taskText
-      });
-      
-      const fullUrl = `${scriptUrl}?${params.toString()}`;
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwrNc7xEoOnrXiUFJbiieRx6hBfcyjre0v5afgxCQl3B_CbidJW08vQu8w2e1obP5yQ/exec';
 
       try {
-        // Отправляем GET-запрос в режиме no-cors
-        await fetch(fullUrl, {
-          method: 'GET',
-          mode: 'no-cors' 
+        await fetch(scriptUrl, {
+          method: 'POST',
+          mode: 'no-cors', // Жестко обходим CORS браузера
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8' // Маскируем JSON под текст
+          },
+          body: JSON.stringify({
+            name: name,
+            phone: phone,
+            task: taskText
+          })
         });
 
-        // Запрос улетел, показываем галочку успеха
+        // Показываем галочку успеха (так как no-cors не дает прочитать реальный статус ответа)
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
         successContainer.classList.add('flex');

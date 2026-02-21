@@ -136,19 +136,15 @@
 
       <!-- AUDIO PLAYER COMPONENT -->
       <div class="bg-white/20 backdrop-blur-xl border border-white/50 shadow-[0_8px_32px_rgba(0,0,0,0.03)] w-full max-w-4xl p-6 md:p-8 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-6 md:gap-8 mx-auto relative overflow-hidden group">
-        <!-- ОПТИМИЗАЦИЯ: Радиальный градиент вместо blur -->
         <div id="audio-bg" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] transition-opacity duration-700 opacity-0 pointer-events-none" style="background: radial-gradient(circle, rgba(147, 197, 253, 0.2) 0%, transparent 60%);"></div>
 
-        <!-- Скрытый тег аудио -->
         <audio id="demo-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
-        <!-- Кнопка Play/Pause -->
         <button id="play-btn" class="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/40 border border-white/80 flex items-center justify-center text-blue-500 hover:bg-white/60 hover:scale-105 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.05)] z-10">
           <i id="play-icon" data-lucide="play" class="w-8 h-8 md:w-10 md:h-10 fill-current ml-1"></i>
           <i id="pause-icon" data-lucide="pause" class="w-8 h-8 md:w-10 md:h-10 fill-current hidden"></i>
         </button>
 
-        <!-- Центральная часть с визуализатором (на все пространство) -->
         <div class="flex-grow w-full flex items-center z-10 px-2 md:px-6">
           <div id="waveform-container" class="flex items-center justify-between w-full h-20 md:h-24 cursor-pointer group/wave">
             <!-- Столбики генерируются через JS -->
@@ -255,7 +251,6 @@
 
       <!-- REAL CASE STUDY: ООО ИнЭко -->
       <div class="anim-target gpu-accel mt-24 bg-gradient-to-br from-white/40 to-white/10 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] p-8 md:p-12 rounded-[3rem] relative overflow-hidden transition-all duration-1000 ease-out opacity-0 translate-y-8" data-hide="opacity-0 translate-y-8" data-show="opacity-100 translate-y-0" style="transition-delay: 200ms;">
-        <!-- Оптимизированное свечение -->
         <div class="absolute top-[-50px] right-[-50px] w-[300px] h-[300px] pointer-events-none" style="background: radial-gradient(circle, rgba(94,234,212,0.15) 0%, transparent 70%);"></div>
 
         <div class="flex flex-col md:flex-row gap-10 items-center relative z-10">
@@ -565,7 +560,7 @@
         </form>
       </div>
 
-      <!-- Success Message (Hidden initially) -->
+      <!-- Success Message -->
       <div id="success-container" class="hidden flex-col items-center text-center py-6 relative z-10 animate-in fade-in zoom-in duration-500">
         <div class="w-16 h-16 rounded-full bg-green-100 border border-green-200 flex items-center justify-center mb-4 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.2)]">
           <i data-lucide="check" style="stroke-width: 3px;" class="w-8 h-8"></i>
@@ -580,13 +575,9 @@
 
   <!-- Vanilla JS Script -->
   <script>
-    // 1. Инициализация иконок Lucide
     lucide.createIcons();
-
-    // 2. Установка текущего года в футере
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // 3. Логика скролла (Шапка и кнопка наверх)
     const header = document.getElementById('main-header');
     const scrollTopBtn = document.getElementById('scroll-to-top');
     let isScrolling = false;
@@ -615,19 +606,15 @@
       }
     });
 
-    // 4. Плавный скролл по якорным ссылкам
     function scrollToSection(id) {
       const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
     }
 
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 5. Анимации при скролле (Intersection Observer)
     const animObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -635,7 +622,6 @@
           targets.forEach(t => {
             const hideClasses = (t.getAttribute('data-hide') || '').split(' ').filter(Boolean);
             const showClasses = (t.getAttribute('data-show') || '').split(' ').filter(Boolean);
-            
             if(hideClasses.length) t.classList.remove(...hideClasses);
             if(showClasses.length) t.classList.add(...showClasses);
           });
@@ -651,7 +637,7 @@
     if(section2) animObserver.observe(section2);
     if(section3) animObserver.observe(section3);
 
-    // 6. Аудиоплеер и живая волна эквалайзера
+    // Audio Visualizer Logic
     const audioEl = document.getElementById('demo-audio');
     const playBtn = document.getElementById('play-btn');
     const playIcon = document.getElementById('play-icon');
@@ -693,7 +679,6 @@
         playIcon.classList.remove('hidden');
         pauseIcon.classList.add('hidden');
         audioBg.classList.remove('opacity-100');
-        
         clearInterval(waveInterval);
         waveformHeights = waveformHeights.map(() => Math.random() * 15 + 10);
         updateWaveVisuals();
@@ -703,7 +688,6 @@
         playIcon.classList.add('hidden');
         pauseIcon.classList.remove('hidden');
         audioBg.classList.add('opacity-100');
-        
         waveInterval = setInterval(() => {
           waveformHeights = waveformHeights.map(() => Math.random() * 80 + 20);
           updateWaveVisuals();
@@ -712,9 +696,7 @@
     });
 
     audioEl.addEventListener('timeupdate', () => {
-      const current = audioEl.currentTime;
-      const total = audioEl.duration || 1;
-      audioProgress = (current / total) * 100;
+      audioProgress = (audioEl.currentTime / (audioEl.duration || 1)) * 100;
       updateWaveVisuals();
     });
 
@@ -737,7 +719,7 @@
       updateWaveVisuals();
     });
 
-    // 7. Логика Модального Окна (Lead Form)
+    // Modal Logic
     const modal = document.getElementById('lead-modal');
     const modalContent = document.getElementById('modal-content');
     const formContainer = document.getElementById('form-container');
@@ -751,16 +733,15 @@
       modal.classList.remove('opacity-0', 'pointer-events-none');
       modalContent.classList.remove('scale-95');
       modalContent.classList.add('scale-100');
-      document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
+      document.body.style.overflow = 'hidden'; 
     }
 
     function closeModal() {
       modal.classList.add('opacity-0', 'pointer-events-none');
       modalContent.classList.remove('scale-100');
       modalContent.classList.add('scale-95');
-      document.body.style.overflow = ''; // Возвращаем скролл
+      document.body.style.overflow = ''; 
       
-      // Сброс формы через 500мс
       setTimeout(() => {
         leadForm.reset();
         formContainer.classList.remove('hidden');
@@ -771,7 +752,6 @@
         submitText.classList.remove('hidden');
         submitLoader.classList.add('hidden');
 
-        // Сброс кастомного селекта
         document.getElementById('custom-select-text').textContent = 'Какую задачу нужно решить?';
         document.getElementById('custom-select-text').classList.add('text-slate-500');
         document.getElementById('custom-select-text').classList.remove('text-slate-800');
@@ -787,31 +767,28 @@
       submitText.classList.add('hidden');
       submitLoader.classList.remove('hidden');
 
-      // Собираем данные
       const name = document.getElementById('name-input').value;
       const phone = document.getElementById('phone-input').value;
       const taskText = document.getElementById('custom-select-text').textContent;
 
-      // Ваш Google Apps Script URL
-      const scriptUrl = 'https://script.google.com/macros/s/AKfycbwDcDaQLA8fBEkzpoWiUoxFcz8At7TZdNoXS7UCvJArTXlhGlv3FPZt7WgIHUnwU0um/exec';
+      // Ваш НОВЫЙ Google Apps Script URL
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxryHOR4kbiPzAoGGmZXErd_9_BExuvA3tGi1gz6_AOJ0sRnhAcMLt2Fiskifqx-uI/exec';
+
+      // Формируем красивое сообщение для скрипта
+      const message = `🔥 Новая заявка с сайта VOCTA!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🎯 Задача: ${taskText}`;
 
       try {
-        const formData = new URLSearchParams();
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('task', taskText);
-        
-        // Формируем красивое сообщение для скрипта
-        const message = `🔥 Новая заявка с сайта VOCTA!\n\n👤 Имя: ${name}\n📞 Телефон: ${phone}\n🎯 Задача: ${taskText}`;
-        formData.append('text', message); 
-
         await fetch(scriptUrl, {
           method: 'POST',
           mode: 'no-cors', 
-          body: formData 
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8' 
+          },
+          body: JSON.stringify({
+            text: message
+          })
         });
 
-        // Запрос улетел, показываем галочку успеха
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
         successContainer.classList.add('flex');
@@ -824,39 +801,24 @@
       }
     });
 
-    // 8. Маска телефона (+7 000 000-00-00)
+    // Phone mask
     const phoneInput = document.getElementById('phone-input');
-    
     phoneInput.addEventListener('input', function (e) {
       let val = e.target.value.replace(/\D/g, ''); 
-      
-      if (val.startsWith('7') || val.startsWith('8')) {
-        val = val.substring(1);
-      }
-      
-      if (val.length === 0) {
-        e.target.value = '';
-        return;
-      }
+      if (val.startsWith('7') || val.startsWith('8')) val = val.substring(1);
+      if (val.length === 0) { e.target.value = ''; return; }
 
       let formatted = '+7 ';
       if (val.length > 0) formatted += val.substring(0, 3);
       if (val.length >= 4) formatted += ' ' + val.substring(3, 6);
       if (val.length >= 7) formatted += '-' + val.substring(6, 8);
       if (val.length >= 9) formatted += '-' + val.substring(8, 10);
-      
       e.target.value = formatted;
     });
+    phoneInput.addEventListener('focus', function(e) { if(e.target.value === '') e.target.value = '+7 '; });
+    phoneInput.addEventListener('blur', function(e) { if(e.target.value === '+7 ' || e.target.value === '+7') e.target.value = ''; });
 
-    phoneInput.addEventListener('focus', function(e) {
-      if(e.target.value === '') e.target.value = '+7 ';
-    });
-    
-    phoneInput.addEventListener('blur', function(e) {
-      if(e.target.value === '+7 ' || e.target.value === '+7') e.target.value = '';
-    });
-
-    // 9. Кастомный выпадающий список
+    // Custom Select
     const selectTrigger = document.getElementById('custom-select-trigger');
     const selectDropdown = document.getElementById('custom-select-dropdown');
     const selectText = document.getElementById('custom-select-text');
@@ -876,33 +838,23 @@
 
     selectTrigger.addEventListener('click', (e) => {
       e.stopPropagation(); 
-      const isOpen = !selectDropdown.classList.contains('opacity-0');
-      if (isOpen) {
-        closeCustomSelect();
-      } else {
-        openCustomSelect();
-      }
+      if (!selectDropdown.classList.contains('opacity-0')) closeCustomSelect();
+      else openCustomSelect();
     });
 
     selectOptions.forEach(option => {
       option.addEventListener('click', (e) => {
-        const value = e.target.getAttribute('data-value');
-        const text = e.target.textContent;
-        
-        selectText.textContent = text;
+        selectText.textContent = e.target.textContent;
         selectText.classList.remove('text-slate-500');
         selectText.classList.add('text-slate-800'); 
-        taskInput.value = value; 
-        
+        taskInput.value = e.target.getAttribute('data-value'); 
         closeCustomSelect();
       });
     });
 
     document.addEventListener('click', (e) => {
       const container = document.getElementById('custom-select-container');
-      if (container && !container.contains(e.target)) {
-        closeCustomSelect();
-      }
+      if (container && !container.contains(e.target)) closeCustomSelect();
     });
 
   </script>

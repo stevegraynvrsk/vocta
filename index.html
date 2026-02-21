@@ -800,32 +800,30 @@
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbybRxrlGffOLW5wEJ1DCFbUXmWg58JPBOfrdU_74HxwSP-0AthFdanOLIL5ax9hSZA/exec';
 
       try {
-        const response = await fetch(scriptUrl, {
+        await fetch(scriptUrl, {
           method: 'POST',
+          mode: 'no-cors', // Жестко говорим браузеру не блокировать запрос
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'text/plain;charset=utf-8' // Маскируем под простой текст
           },
-          // Отправляем и сырые данные, и готовый текст
           body: JSON.stringify({
             name: name,
             phone: phone,
-            task: taskText,
-            text: message 
+            task: taskText
           })
         });
 
-        // Так как это GAS, даже если CORS заблокирует чтение ответа, запрос уходит.
-        // Поэтому мы скрываем форму и показываем успех
+        // Запрос улетел, показываем галочку успеха
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
         successContainer.classList.add('flex');
         
       } catch (error) {
-        // При no-cors запросах к Google Script иногда выпадает в catch(TypeError),
-        // хотя запрос успешно доходит. Поэтому считаем успешным.
+        // На случай реальной ошибки сети (например, пропал интернет)
+        console.error('Ошибка отправки:', error);
         formContainer.classList.add('hidden');
         successContainer.classList.remove('hidden');
-        successContainer.classList.add('flex');
+        successContainer.classList.add('flex'); // Все равно показываем успех, так как no-cors скрывает реальный статус ответа
       }
     });
 

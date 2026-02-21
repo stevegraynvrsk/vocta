@@ -156,7 +156,7 @@
         </div>
       </div>
       
-      <!-- Кнопка под аудиоплеером (Новая) -->
+      <!-- Кнопка под аудиоплеером -->
       <div class="mt-12 z-10 relative">
         <button onclick="openModal()" class="cta-btn px-8 py-4 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-blue-200/50 hover:bg-white/60 hover:border-blue-300 transition-all duration-500 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)] text-sm tracking-widest uppercase font-medium text-slate-700 hover:text-blue-600 flex items-center gap-2 hover:-translate-y-1">
           Внедрить в свой бизнес
@@ -514,8 +514,8 @@
 
   <!-- MODAL: Form Overlay -->
   <div id="lead-modal" class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm" id="modal-backdrop" onclick="closeModal()"></div>
+    <!-- ОПТИМИЗАЦИЯ: Усилено размытие и плотность заднего фона модалки -->
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" id="modal-backdrop" onclick="closeModal()"></div>
     
     <!-- Modal Content -->
     <div id="modal-content" class="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-2xl rounded-[2.5rem] w-[90%] max-w-md p-8 relative transform scale-95 transition-transform duration-500 z-10 overflow-visible">
@@ -746,20 +746,12 @@
     const submitBtn = document.getElementById('submit-btn');
     const submitText = document.getElementById('submit-text');
     const submitLoader = document.getElementById('submit-loader');
-    
-    // Элементы, которые нужно скрыть при открытии формы (все кнопки + блок преимуществ)
-    const ctaButtons = document.querySelectorAll('.cta-btn'); 
-    const benefitsSection = document.getElementById('section-4'); 
 
     function openModal() {
       modal.classList.remove('opacity-0', 'pointer-events-none');
       modalContent.classList.remove('scale-95');
       modalContent.classList.add('scale-100');
       document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
-      
-      // Прячем все кнопки CTA и блок преимуществ, чтобы они не просвечивали
-      ctaButtons.forEach(btn => btn.classList.add('opacity-0', 'pointer-events-none'));
-      if (benefitsSection) benefitsSection.classList.add('opacity-0', 'pointer-events-none');
     }
 
     function closeModal() {
@@ -767,10 +759,6 @@
       modalContent.classList.remove('scale-100');
       modalContent.classList.add('scale-95');
       document.body.style.overflow = ''; // Возвращаем скролл
-      
-      // Возвращаем все кнопки и блок преимуществ на место
-      ctaButtons.forEach(btn => btn.classList.remove('opacity-0', 'pointer-events-none'));
-      if (benefitsSection) benefitsSection.classList.remove('opacity-0', 'pointer-events-none');
       
       // Сброс формы через 500мс
       setTimeout(() => {

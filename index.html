@@ -683,12 +683,62 @@
       </section>
     </div> <!-- END OF PAGE POLICY -->
 
+    <!-- PAGE 4: CONSENT (Скрыта по умолчанию) -->
+    <div id="page-consent" class="flex flex-col items-center w-full transition-opacity duration-500 opacity-0 hidden pt-24 md:pt-32 pb-20">
+      <section class="w-full flex flex-col items-center">
+        
+        <div class="w-full max-w-4xl bg-white/30 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] rounded-[3rem] overflow-hidden relative p-8 md:p-14">
+          
+          <!-- Кнопка закрытия (Возврат на главную) -->
+          <button onclick="switchPage('page-home')" class="absolute top-6 right-6 md:top-8 md:right-8 text-slate-400 hover:text-slate-800 transition-colors z-20">
+            <i data-lucide="x" class="w-6 h-6 md:w-7 md:h-7"></i>
+          </button>
+
+          <h2 class="text-2xl md:text-3xl font-medium text-slate-800 mb-10 tracking-wide pr-8">СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ</h2>
+          
+          <div class="space-y-6 text-sm md:text-base text-slate-700 font-light leading-relaxed">
+            
+            <p>Действуя свободно, своей волей и в своем интересе, а также подтверждая свою дееспособность, Пользователь сайта https://vocta.ru (далее – Сайт) дает свое согласие Шуралеву Сергею Александровичу (ИНН: 231519459191, плательщик налога на профессиональный доход) (далее – Оператор) на обработку своих персональных данных со следующими условиями:</p>
+            
+            <p>1. Данное Согласие дается на обработку персональных данных, как без использования средств автоматизации, так и с их использованием.</p>
+            
+            <div>
+              <p>2. Согласие дается на обработку следующих персональных данных:</p>
+              <ul class="list-disc list-inside mt-2 ml-2 space-y-1">
+                <li>Имя;</li>
+                <li>Номер контактного телефона;</li>
+                <li>Суть задачи (обращения).</li>
+              </ul>
+            </div>
+            
+            <p>3. Персональные данные не являются общедоступными.</p>
+            
+            <p>4. Цель обработки персональных данных: обработка входящих запросов Пользователей с целью оказания консультирования, направления информации об услугах по внедрению нейро-сотрудников и обсуждения условий возможного сотрудничества.</p>
+            
+            <p>5. Основанием для обработки персональных данных является: ст. 24 Конституции Российской Федерации; ст. 6 Федерального закона №152-ФЗ «О персональных данных»; настоящее согласие на обработку персональных данных.</p>
+            
+            <p>6. В ходе обработки с персональными данными будут совершены следующие действия: сбор, запись, систематизация, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передача (предоставление, доступ), блокирование, удаление, уничтожение.</p>
+            
+            <p>7. Персональные данные обрабатываются до завершения всех необходимых процедур, связанных с обработкой обращения Пользователя, либо до момента отзыва Пользователем согласия на их обработку.</p>
+            
+            <p>8. Согласие может быть отозвано Пользователем или его представителем путем направления электронного заявления Оператору по адресу электронной почты: shuralyov@yandex.ru.</p>
+            
+            <p>9. Настоящее согласие действует все время до момента прекращения обработки персональных данных, указанных в п.7 и п.8 данного Согласия.</p>
+
+          </div>
+        </div>
+      </section>
+    </div> <!-- END OF PAGE CONSENT -->
+
   </main>
 
   <!-- Minimal Footer -->
   <footer class="w-full py-8 border-t border-white/30 backdrop-blur-md bg-white/10 text-center relative z-20 flex flex-col items-center gap-3">
     <p class="text-xs tracking-widest text-slate-500 font-light">&copy; <span id="current-year"></span> VOCTA. ALL RIGHTS RESERVED.</p>
-    <button onclick="switchPage('page-policy')" class="text-[10px] md:text-xs tracking-widest text-slate-400 hover:text-blue-500 transition-colors duration-300 uppercase">Политика конфиденциальности</button>
+    <div class="flex flex-col md:flex-row gap-2 md:gap-6 items-center mt-1">
+      <button onclick="switchPage('page-policy')" class="text-[10px] md:text-xs tracking-widest text-slate-400 hover:text-blue-500 transition-colors duration-300 uppercase">Политика конфиденциальности</button>
+      <button onclick="switchPage('page-consent')" class="text-[10px] md:text-xs tracking-widest text-slate-400 hover:text-blue-500 transition-colors duration-300 uppercase">Согласие на обработку данных</button>
+    </div>
   </footer>
 
   <!-- Scroll to Top Button -->
@@ -755,7 +805,7 @@
           
           <!-- Мелкий текст про политику под кнопкой (некликабельный) -->
           <p class="text-[10px] text-slate-400 text-center mt-3 font-light px-2 leading-tight">
-            Нажимая кнопку, вы соглашаетесь с Политикой конфиденциальности
+            Нажимая кнопку, вы соглашаетесь с Политикой конфиденциальности и даете согласие на обработку персональных данных
           </p>
         </form>
       </div>
@@ -811,7 +861,7 @@
       const targetPage = document.getElementById(pageId);
       if (!targetPage || !targetPage.classList.contains('hidden')) return;
 
-      const pages = ['page-home', 'page-tariffs', 'page-policy'];
+      const pages = ['page-home', 'page-tariffs', 'page-policy', 'page-consent'];
       const currentPageId = pages.find(id => {
         const el = document.getElementById(id);
         return el && !el.classList.contains('hidden');
